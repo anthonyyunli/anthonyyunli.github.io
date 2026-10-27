@@ -1,10 +1,11 @@
-# 0xc0ffee.ca terminal design update
+# 0xc0ffee.ca split-terminal update
 
-The user requested a more individual terminal style while retaining the simple npm/Next.js template.
+The user requested a full-width 50/50 desktop home: empty ASCII stage on the left and centered whoami/ls content on the right. Remove the two home biography lines. Stack panes on small screens.
 
-- Use the existing Next.js, React, and React DOM dependencies.
-- Keep Home, About, Blog, and Projects, all supplied project details, the blank résumé, and empty blog.
-- Give the site a restrained green accent, shell-style command headings, bracketed active navigation, and a left-aligned home introduction.
-- Replace reference-style project cards with plain directory entries and retain native details disclosures.
-- Keep the cursor subtle and honor reduced motion.
-- Verify the static build, all four routes, responsive layout, active navigation, links, and disclosures before updating the existing private preview.
+Use neutral black/white with restrained navy, square terminal panes and clean spacing, with no visible grid lines, borders, or pane dividers. Remove all green styling. Retain npm, Next.js, React, and React DOM with no new dependencies.
+
+Projects become a responsive terminal grid with file-path title bars. Remove expandable details. Keep existing project summaries, roles, stacks, and source links. The résumé stays blank and the blog empty.
+
+Verify production export, equal-width desktop panes, reserved empty ASCII stage, centered right-hand content, all four routes, active navigation, responsive grids, absence of details controls, and reduced motion before publishing the existing private preview.
+
+Visual references clarified a neofetch-style composition: a seamless canvas, with a compact left-aligned text block centered within the right half. Keep the left art stage empty. Do not add pane title bars, outlines, or dividers.

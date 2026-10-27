@@ -1,6 +1,6 @@
 # 0xc0ffee.ca
 
-Anthony Li's personal site. Next.js App Router, React, and plain CSS, using npm. A restrained terminal design: shell prompts, bracketed navigation, a left-aligned introduction, soft green accents, and projects listed as directory entries. The original reference informed the simplicity; the layout and components have their own identity.
+Anthony Li's personal site. Next.js App Router, React, and plain CSS, using npm. A full-width split-terminal home: an empty ASCII art pane on the left and a centered block of neofetch-style shell output on the right. The design uses black, white, and restrained navy with borderless terminal grids for projects. The original reference informed the simplicity; the layout and components have their own identity.
 
 ## Develop
 
@@ -31,13 +31,13 @@ src/
     page.js             home
     about/page.js       about and achievements
     blog/page.js        empty blog
-    projects/page.js    project directory
+    projects/page.js    terminal project grid
   components/
     Header.js
     Footer.js
     ProjectEntry.js
     CommandLine.js
-  data/projects.js      project descriptions, links, and details
+  data/projects.js      project descriptions and links
 public/
   favicon.svg
 ```
@@ -48,6 +48,6 @@ There are three direct dependencies: `next`, `react`, and `react-dom`. No compon
 
 Project information comes from the supplied GitHub profile and details provided in chat. Edit `src/data/projects.js` to change project content. The résumé is intentionally left blank. The blog has no placeholder posts; add future routes under `src/app/blog/`.
 
-For future ASCII animations or a C++ fluid simulation, add an isolated client component and load it only on its experiment page. Emscripten's generated JavaScript/WebAssembly assets can go in `public/fluid/`. The current template does not implement these future experiments.
+The home page reserves an empty `pre[data-ascii-stage]` for future ASCII art. For animations or a C++ fluid simulation, add an isolated client component and load it only where needed. Emscripten's generated JavaScript/WebAssembly assets can go in `public/fluid/`. The current template does not implement these future experiments.
 
 The site is branded for `0xc0ffee.ca`; custom-domain/DNS configuration is still pending.

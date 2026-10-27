@@ -9,10 +9,10 @@ export const metadata = {
 
 export default function Projects() {
   return (
-    <section className="page-content" aria-labelledby="projects-title">
+    <section className="page-content projects-page" aria-labelledby="projects-title">
       <CommandLine>ls -la projects/</CommandLine>
       <h1 className="page-title" id="projects-title">projects/</h1>
-      <div className="project-list">
+      <div className="project-grid">
         {projects.map((project) => <ProjectEntry key={project.id} project={project} />)}
       </div>
       {/* Future ASCII animations and C++/WebAssembly fluid simulation can live on their own routes. */}
