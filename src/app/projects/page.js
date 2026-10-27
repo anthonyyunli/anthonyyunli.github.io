@@ -1,4 +1,5 @@
-import ProjectCard from '../../components/ProjectCard';
+import ProjectEntry from '../../components/ProjectEntry';
+import CommandLine from '../../components/CommandLine';
 import { projects } from '../../data/projects';
 
 export const metadata = {
@@ -9,9 +10,10 @@ export const metadata = {
 export default function Projects() {
   return (
     <section className="page-content" aria-labelledby="projects-title">
-      <h1 className="page-title" id="projects-title">Projects</h1>
-      <div className="project-grid">
-        {projects.map((project) => <ProjectCard key={project.id} project={project} />)}
+      <CommandLine>ls -la projects/</CommandLine>
+      <h1 className="page-title" id="projects-title">projects/</h1>
+      <div className="project-list">
+        {projects.map((project) => <ProjectEntry key={project.id} project={project} />)}
       </div>
       {/* Future ASCII animations and C++/WebAssembly fluid simulation can live on their own routes. */}
     </section>

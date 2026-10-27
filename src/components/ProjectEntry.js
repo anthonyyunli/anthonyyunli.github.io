@@ -1,7 +1,7 @@
-export default function ProjectCard({ project }) {
+export default function ProjectEntry({ project }) {
   return (
-    <article className="project-card" id={project.id}>
-      <h2>{project.source ? <a href={project.source}>{project.title}</a> : project.title}</h2>
+    <article className="project-entry" id={project.id}>
+      <h2><span className="entry-prefix" aria-hidden="true">./</span>{project.title}</h2>
       {project.role && <p className="project-role">{project.role}</p>}
       <p>{project.description}</p>
       {project.details?.length > 0 && (

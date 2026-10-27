@@ -1,6 +1,6 @@
 # 0xc0ffee.ca
 
-Anthony Li's personal site. Next.js App Router, React, and plain CSS, using npm. The layout follows [int0x80.ca](https://github.com/kevlu8/int0x80.ca): a black background, compact header, centered home, and simple bordered content. Terminal styling is limited to monospace type and a cursor.
+Anthony Li's personal site. Next.js App Router, React, and plain CSS, using npm. A restrained terminal design: shell prompts, bracketed navigation, a left-aligned introduction, soft green accents, and projects listed as directory entries. The original reference informed the simplicity; the layout and components have their own identity.
 
 ## Develop
 
@@ -31,11 +31,12 @@ src/
     page.js             home
     about/page.js       about and achievements
     blog/page.js        empty blog
-    projects/page.js    project grid
+    projects/page.js    project directory
   components/
     Header.js
     Footer.js
-    ProjectCard.js
+    ProjectEntry.js
+    CommandLine.js
   data/projects.js      project descriptions, links, and details
 public/
   favicon.svg
