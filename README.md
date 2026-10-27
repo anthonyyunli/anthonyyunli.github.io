@@ -1,54 +1,52 @@
 # 0xc0ffee.ca
 
-A small terminal-inspired personal site for Anthony Li. Plain HTML, CSS, and a little optional JavaScript. No framework, package install, or build step.
+Anthony Li's personal site. Next.js App Router, React, and plain CSS, using npm. The layout follows [int0x80.ca](https://github.com/kevlu8/int0x80.ca): a black background, compact header, centered home, and simple bordered content. Terminal styling is limited to monospace type and a cursor.
 
-## Run locally
+## Develop
 
-From this directory:
+Requires Node.js 20.9+ and npm.
 
 ```sh
-python3 -m http.server 3000 --directory dist
+npm install
+npm run dev
 ```
 
-Open http://localhost:3000. The same `dist/` folder can be deployed to any static host.
+Open http://localhost:3000.
 
-## Edit
+## Build
+
+```sh
+npm run build
+```
+
+Next.js exports static pages to `out/`. Deploy that directory to any static host. The private Sites preview uses the same build output.
+
+## Structure
 
 ```text
-dist/
-  index.html           home
-  about/index.html     about (résumé intentionally omitted)
-  blog/index.html      empty blog index
-  projects/index.html  public project links
-  assets/style.css     shared visual styles and color tokens
-  assets/site.js       optional terminal navigation
-  assets/favicon.svg   coffee favicon
+src/
+  app/
+    layout.js           shared page shell and metadata
+    globals.css         all styles
+    page.js             home
+    about/page.js       about and achievements
+    blog/page.js        empty blog
+    projects/page.js    project grid
+  components/
+    Header.js
+    Footer.js
+    ProjectCard.js
+  data/projects.js      project descriptions, links, and details
+public/
+  favicon.svg
 ```
 
-Navigation is ordinary HTML and works with JavaScript disabled. Keep the shared header/footer consistent when editing. There is no analytics, remote font, runtime API call, or client framework.
+There are three direct dependencies: `next`, `react`, and `react-dom`. No component library, CSS framework, icon package, or remote font. `package-lock.json` pins the installation.
 
-### Résumé
+## Content
 
-The résumé section is intentionally blank, as requested. To add it later, place your PDF at `dist/assets/resume.pdf` and add a link at the HTML comment on the About page. The initial content uses your public GitHub profile and the project/achievement details you supplied in chat.
+Project information comes from the supplied GitHub profile and details provided in chat. Edit `src/data/projects.js` to change project content. The résumé is intentionally left blank. The blog has no placeholder posts; add future routes under `src/app/blog/`.
 
-### Blog
+For future ASCII animations or a C++ fluid simulation, add an isolated client component and load it only on its experiment page. Emscripten's generated JavaScript/WebAssembly assets can go in `public/fluid/`. The current template does not implement these future experiments.
 
-The blog intentionally starts empty. To publish a post, create `dist/blog/your-post/index.html` using the existing page shell, set its unique title and description, and add an ordinary link and publication date to `dist/blog/index.html`. The `.prose` class handles article typography.
-
-### ASCII animations
-
-The home page's static coffee art is a `<pre>` inside `[data-ascii-stage]`. Replace its content from an independent ES module when ready. Respect `prefers-reduced-motion`, pause offscreen work, and keep animated frames out of screen-reader announcements.
-
-### C++ fluid simulation
-
-Keep the simulation independent of the page shell. Compile it to WebAssembly with Emscripten and expose a small initialize/step/destroy interface. Serve the generated `.js` and `.wasm` assets from `dist/assets/fluid/`, then dynamically import the module on a future experiment page. This template includes no simulation or fake demo. A single-threaded WebAssembly build works on ordinary static hosting; a pthread build also needs cross-origin isolation headers.
-
-### Domain
-
-The site is branded for `0xc0ffee.ca`; the Sites preview is private. Connecting the domain requires configuring the host's custom-domain setting and the domain's DNS. Do not point DNS at a private preview if the intended audience is public.
-
-## Sources
-
-- Profile and biography: https://github.com/anthonyyunli and https://github.com/anthonyyunli/anthonyyunli
-- Project descriptions: the profile README, linked repositories, and project/achievement details supplied in chat
-- Design reference: https://github.com/kevlu8/int0x80.ca — original implementation; no reference source copied
+The site is branded for `0xc0ffee.ca`; custom-domain/DNS configuration is still pending.

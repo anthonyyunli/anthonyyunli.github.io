@@ -1,42 +1,32 @@
 # 0xc0ffee.ca Implementation Plan
 
-> **For agentic workers:** Use inline execution for this small static template.
+**Goal:** A barebones personal site matching the requested reference, with Home, About, Blog, and Projects.
 
-**Goal:** A minimal terminal-style personal website for Anthony Li with Home, About, Blog, and Projects.
+**User corrections:** Use npm, allow minimal dependencies, and replace the overstyled terminal design with a layout closely following `kevlu8/int0x80.ca`.
 
-**Architecture:** Buildless semantic HTML in `dist/`, one shared stylesheet, and a small optional command navigator. Ordinary links work without JavaScript. Future animations and a C++/WebAssembly experiment can load independently.
+**Architecture:** Next.js App Router, React, and React DOM only. Plain CSS, shared header/footer, centralized project data, and static export to `out/`.
 
-**Tech Stack:** HTML, CSS, browser JavaScript. No dependencies or framework.
+## Requirements
 
-**Spec:** User request in this conversation: clean reference-inspired layout, stronger terminal styling, four pages, barebones first; ASCII animation and C++ fluid simulation are future work.
-
-## Global Constraints
-
-- Use verified public details from `github.com/anthonyyunli` and its profile README.
-- Leave the résumé blank per the user's correction. Include the CanSat, Mayhem, compact detector, and achievement details explicitly supplied in chat. No invented employment, contact details, or blog posts.
-- Use a charcoal background, muted green accent, monospace type, plain project lists, responsive layout, and visible keyboard focus.
-- Publish the first preview privately through Sites. The requested custom domain is a deployment follow-up.
-
-## Review Focus
-
-- All navigation works directly, including fresh page loads without JavaScript.
-- Small screens have no horizontal overflow or obscured navigation.
-- The optional command navigator accepts only fixed local routes and never executes code.
-- An empty blog accurately communicates that no posts are published.
-- Reduced-motion users get a stationary cursor.
+- Black background, full-width compact header, centered home title, and simple bordered project/about content following the reference.
+- Keep terminal details restrained: monospace text and a small cursor. No command input, decorative coffee illustration, green palette, numbered lists, or homepage project feed.
+- Keep the résumé blank and the blog empty. Include only verified GitHub details and the project/achievement information supplied in chat.
+- Preserve the existing private preview and project identity.
 
 ## Tasks
 
-- [x] Create the four pages and shared styles, favicon, and optional command navigator.
-- [x] Add README instructions for local preview, content edits, blog entries, and future ASCII/WebAssembly modules.
-- [x] Verify internal links, document structure, JavaScript syntax, and desktop/mobile rendering where browser access permits.
-- [ ] Package, push, and privately publish the static template through Sites.
+- [x] Replace static HTML with npm/Next.js source and shared components.
+- [x] Simplify the visual design to match the reference.
+- [x] Document npm usage, project content, and future ASCII/WebAssembly experiments.
+- [x] Install dependencies with npm (three direct dependencies, no reported vulnerabilities).
+- [x] Verify production static export, desktop/mobile layouts, navigation, and project disclosures.
+Publication: submit the verified source through the Sites workflow; the native deployment history records the final status.
 
 ## Verification
 
-- JavaScript syntax check passed.
-- All four HTML pages have one main heading, one active navigation link, working local links/anchors, and available assets.
-- Real browser checks passed for all pages at 1440, 768, 390, and 320px, with no horizontal overflow.
-- Terminal help, clear, whoami, unknown-command text escaping, keyboard shortcuts, and `cd about` navigation passed.
-- Native project disclosures, reduced motion, and navigation without JavaScript passed. No browser runtime exceptions.
-- Desktop and mobile screenshots reviewed. Résumé content is omitted; only public GitHub details and the user's explicitly supplied project/achievement details appear.
+- `npm run build`: all four routes statically exported.
+- `npm run dev`: all four routes return HTTP 200.
+- Real browser: all pages at 1440, 768, 390, and 320px; no horizontal overflow.
+- Centered homepage, compact 64px desktop header, and responsive two-column project grid checked.
+- Native project disclosures and navigation with JavaScript disabled passed.
+- Desktop/mobile screenshots reviewed; no runtime exceptions.
