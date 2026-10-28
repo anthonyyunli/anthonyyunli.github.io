@@ -7,7 +7,25 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 const INITIAL_VIEW = { azimuth: 332.1, elevation: -5, distance: 5.7 };
 const GLIDE_SECONDS = 1.1;
 
+function disposeModel(root) {
+  root?.traverse((object) => {
+    if (!object.isMesh) return;
+    object.geometry.dispose();
+    const materials = Array.isArray(object.material) ? object.material : [object.material];
+    for (const material of materials) {
+      for (const value of Object.values(material)) {
+        if (value?.isTexture) {
+          value.source?.data?.close?.();
+          value.dispose();
+        }
+      }
+      material.dispose();
+    }
+  });
+}
+
 export async function createAsciiRabbit(host, signal) {
+  signal.throwIfAborted();
   const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
   renderer.setPixelRatio(1);
   renderer.setClearColor(0x000000, 0);
@@ -47,7 +65,6 @@ export async function createAsciiRabbit(host, signal) {
 
   let model;
   let mixer;
-  let paused = motion.matches;
   let disposed = false;
   let visible = true;
   let dirty = true;
@@ -73,23 +90,26 @@ export async function createAsciiRabbit(host, signal) {
   intersectionObserver.observe(host);
 
   function onMotionChange() {
-    paused = motion.matches;
     controls.enableDamping = !motion.matches;
     dirty = true;
   }
   motion.addEventListener('change', onMotionChange);
 
-  function disposeModel(root) {
-    root?.traverse((object) => {
-      if (!object.isMesh) return;
-      object.geometry.dispose();
-      for (const material of Array.isArray(object.material) ? object.material : [object.material]) {
-        for (const value of Object.values(material)) {
-          if (value?.isTexture) { value.source?.data?.close?.(); value.dispose(); }
-        }
-        material.dispose();
-      }
-    });
+  function onKeyDown(event) {
+    const { key } = event;
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(key)) return;
+    event.preventDefault();
+
+    const offset = camera.position.clone().sub(controls.target);
+    const spherical = new THREE.Spherical().setFromVector3(offset);
+    if (key === 'ArrowLeft') spherical.theta -= 0.12;
+    if (key === 'ArrowRight') spherical.theta += 0.12;
+    if (key === 'ArrowUp') spherical.phi -= 0.12;
+    if (key === 'ArrowDown') spherical.phi += 0.12;
+    spherical.phi = THREE.MathUtils.clamp(spherical.phi, controls.minPolarAngle, controls.maxPolarAngle);
+    camera.position.copy(controls.target).add(offset.setFromSpherical(spherical));
+    controls.update();
+    dirty = true;
   }
 
   function dispose() {
@@ -99,6 +119,7 @@ export async function createAsciiRabbit(host, signal) {
     resizeObserver.disconnect();
     intersectionObserver.disconnect();
     motion.removeEventListener('change', onMotionChange);
+    host.removeEventListener('keydown', onKeyDown);
     signal.removeEventListener('abort', dispose);
     controls.removeEventListener('change', markDirty);
     controls.dispose();
@@ -144,7 +165,10 @@ export async function createAsciiRabbit(host, signal) {
       // Smooth coasting with a shorter tail, independent of refresh rate.
       controls.dampingFactor = 1 - Math.exp(-delta / GLIDE_SECONDS);
       controls.update(delta);
-      if (!paused) { mixer.update(delta); dirty = true; }
+      if (!motion.matches) {
+        mixer.update(delta);
+        dirty = true;
+      }
       if (dirty && now - lastRender >= 1000 / 24) {
         effect.render(scene, camera);
         dirty = false;
@@ -152,25 +176,8 @@ export async function createAsciiRabbit(host, signal) {
       }
     }
     effect.render(scene, camera);
+    host.addEventListener('keydown', onKeyDown);
     frame = requestAnimationFrame(animate);
-
-    return {
-      dispose,
-      handleKey(key) {
-        if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(key)) return false;
-        const offset = camera.position.clone().sub(controls.target);
-        const spherical = new THREE.Spherical().setFromVector3(offset);
-        if (key === 'ArrowLeft') spherical.theta -= 0.12;
-        if (key === 'ArrowRight') spherical.theta += 0.12;
-        if (key === 'ArrowUp') spherical.phi -= 0.12;
-        if (key === 'ArrowDown') spherical.phi += 0.12;
-        spherical.phi = THREE.MathUtils.clamp(spherical.phi, controls.minPolarAngle, controls.maxPolarAngle);
-        camera.position.copy(controls.target).add(offset.setFromSpherical(spherical));
-        controls.update();
-        dirty = true;
-        return true;
-      },
-    };
   } catch (error) {
     dispose();
     throw error;

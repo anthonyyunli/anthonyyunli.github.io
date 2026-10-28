@@ -1,8 +1,8 @@
 # 0xc0ffee.ca
 
-Anthony Li's personal site. Next.js App Router, React, and plain CSS, using npm. A full-width split-terminal home: an interactive monochrome ASCII rabbit on the left and a centered block of neofetch-style shell output on the right. The design uses black, white, and restrained navy with one continuous borderless two-column terminal layout for projects. The original reference informed the simplicity; the layout and components have their own identity.
+Anthony Li's personal site: Next.js App Router, React, plain CSS, and a Three.js ASCII rabbit. Uses npm and exports static HTML. No UI library, CSS framework, remote fonts, or backend.
 
-## Develop
+## Run
 
 Requires Node.js 20.9+ and npm.
 
@@ -11,55 +11,57 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000.
-
-## Build
+Open http://localhost:3000. `package-lock.json` pins the four direct dependencies: `next`, `react`, `react-dom`, and `three`.
 
 ```sh
+npm test
 npm run build
 ```
 
-Next.js exports static pages to `out/`. Deploy that directory to any static host. The private Sites preview uses the same build output.
+Tests cover deterministic fur shading. The build exports all pages and public assets to `out/`, ready for a static host. `.openai/hosting.json` configures the existing private Sites preview. Custom-domain/DNS setup for `0xc0ffee.ca` is still pending.
 
-## Structure
+## Where to edit
 
-```text
-src/
-  app/
-    layout.js           shared page shell and metadata
-    globals.css         all styles
-    page.js             home
-    about/page.js       about and achievements
-    blog/page.js        empty blog
-    projects/page.js    terminal project grid
-  components/
-    Header.js
-    Footer.js
-    ProjectEntry.js
-    CommandLine.js
-  data/projects.js      project descriptions and links
-public/
-  favicon.svg
-  images/               About photo and CanSat album
-  models/               rabbit GLB and license
-```
+| Change | File |
+| --- | --- |
+| Home text and directory links | `src/app/page.js` |
+| About photo and paragraphs | `src/app/about/page.js` |
+| Blog entries | `src/app/blog/page.js` |
+| Project content, links, and images | `src/data/projects.js` |
+| Project markup | `src/components/ProjectEntry.js` |
+| Photo album controls | `src/components/PhotoAlbum.js` |
+| Navigation and footer | `src/components/Header.js`, `Footer.js` |
+| Site metadata | `src/app/layout.js` |
+| Layout, colors, and responsive rules | `src/app/globals.css` |
 
-There are four direct dependencies: `next`, `react`, `react-dom`, and `three`. Three.js is loaded only by the home-page rabbit viewer. No component library, CSS framework, icon package, or remote font. `package-lock.json` pins the installation.
+Pages are server components. Only navigation state, the rabbit, and the photo album need client JavaScript. Small event handlers remain beside the UI they control; there is no state manager or custom-hook layer.
 
-## Content
+CSS is grouped by feature, with one mobile breakpoint block at the end. All content pages share `.page-content` to keep prompts aligned. The home split uses `--shell-text-width` to keep the viewport boundary and text width in sync.
 
-Project information comes from the supplied GitHub profile and details provided in chat. Edit `src/data/projects.js` to change project content. The résumé is intentionally left blank. The blog has no placeholder posts; add future routes under `src/app/blog/`.
+## Projects and photos
 
-The home page renders the supplied animated rabbit as monochrome ASCII, using 14px characters and short directional fur strokes. The viewport extends to the shell text's left edge, reclaiming the former inner gutter while preserving the text's horizontal position. The desktop shell has no internal padding. Stable jitter varies the texture without frame-to-frame random flicker. Drag or use arrow keys to orbit up to 18° horizontally and 8° vertically around the selected view; drag inertia decays over 1.1 seconds. Wheel/pinch zoom is disabled. Reduced-motion preferences pause animation automatically.
+Add an object to the `projects` array. Each project has `id`, `title`, `role`, `stack`, `description`, and `href`. The directory name links to `href`; the title stays plain text.
 
-The selected camera angle is `{ azimuth: 328.1, elevation: 11.5 }`, with distance pulled back slightly to `5.2`, stored in `src/lib/ascii-rabbit.js` as `INITIAL_VIEW`. The temporary camera setup panel has been removed. `npm test` checks the directional fur shading, transparent background, highlights, shadow density, and stable variation.
+- `image` adds one image: `{ src, alt, width, height }`.
+- `photos` adds an album: a nonempty array of `{ src, alt, label, width, height, position?, fit? }`. The first item is the thumbnail. `position` controls its crop, for example `50% 12%`. Use `fit: 'contain'` to show an entire UI screenshot.
 
-For a C++ fluid simulation, add an isolated client component and load it only where needed. Emscripten's generated JavaScript/WebAssembly assets can go in `public/fluid/`. The current template does not implement this future experiment.
+Put optimized assets in `public/images/`. The About portrait is `about-3499.webp`; Mayhem uses `mayhem.webp`. CanSat starts with IMG_2113, followed by 3949 (1) and IMG_2125. Subs Tracker includes its dashboard, add-plan screen, and annotated wireframe. Original source assets stay in the ignored `temp/` folder.
 
-The site is branded for `0xc0ffee.ca`; custom-domain/DNS configuration is still pending.
+The album uses a native `<dialog>` with arrow-key navigation and Escape to close. Labels come from the project title. Its only DOM ref is the dialog itself.
 
-## Photos and model
+The blog is intentionally empty and the résumé is intentionally absent.
 
-The CanSat album starts with IMG_2113, followed by 3949 (1) and IMG_2125. Its arrows cycle through the photos; opening a photo shows the complete image and supports arrow keys/Escape. The About portrait uses the supplied IMG_3499, replacing IMG_3766. Mayhem uses the supplied image (1).png screenshot. Images are optimized as WebP. Original files remain in the local ignored temp folder.
+## ASCII rabbit
 
-The rabbit is based on [RABBIT - Realistic 3D Model (DEMO FREE)](https://sketchfab.com/3d-models/rabbit-realistic-3d-model-demo-free-d70284ea0d7644988bdcd327c3ffb59a) by [WildMesh 3D](https://sketchfab.com/WildMesh_3D), licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). The material is simplified for monochrome rendering; geometry and animation are retained. Attribution appears beside the copyright in the bottom-left footer and the original license is included in public/models/rabbit.LICENSE.txt.
+- `src/components/AsciiRabbit.js` loads the viewer and shows loading/error status. Its only DOM ref is the viewport.
+- `src/lib/ascii-rabbit.js` owns the scene, camera, animation loop, input listeners, and resource cleanup. Edit `INITIAL_VIEW`, `GLIDE_SECONDS`, and the orbit bounds here.
+- `src/lib/FurAsciiEffect.js` converts the rendered model to characters. Edit the font size and line height here.
+- `src/lib/fur-shading.js` contains the pure, deterministic character selection, covered by `tests/fur-shading.test.js`.
+
+`createAsciiRabbit(host, signal)` initializes the viewer. Aborting the signal is the single teardown path; the viewer releases its observers, input listeners, animation frame, model, and WebGL context. A failed model load uses the same cleanup. React does not keep a second controller or forward keyboard events.
+
+Dragging and arrow keys orbit within bounds; wheel/pinch zoom stays disabled. Reduced motion freezes animation. Hidden or offscreen viewers stop rendering. Three.js loads only on Home.
+
+For a future C++ fluid simulation, add a separate client component and keep generated JavaScript/WebAssembly assets in `public/fluid/`. There is no simulation framework to work around.
+
+The rabbit is based on [RABBIT - Realistic 3D Model (DEMO FREE)](https://sketchfab.com/3d-models/rabbit-realistic-3d-model-demo-free-d70284ea0d7644988bdcd327c3ffb59a) by [WildMesh 3D](https://sketchfab.com/WildMesh_3D), under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). Its material is simplified for monochrome rendering; geometry and animation are retained. Keep the footer attribution and `public/models/rabbit.LICENSE.txt`.

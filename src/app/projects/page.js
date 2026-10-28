@@ -4,7 +4,7 @@ import { projects } from '../../data/projects';
 
 export const metadata = {
   title: 'Projects',
-  description: 'CanSat, Mayhem, CS229, and Breckeys — projects by Anthony Li.',
+  description: 'CanSat, Mayhem, CS229, Breckeys, and Subs Tracker — projects by Anthony Li.',
 };
 
 export default function Projects() {
