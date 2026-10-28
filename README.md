@@ -1,6 +1,6 @@
 # 0xc0ffee.ca
 
-Anthony Li's personal site. Next.js App Router, React, and plain CSS, using npm. A full-width split-terminal home: an empty ASCII art pane on the left and a centered block of neofetch-style shell output on the right. The design uses black, white, and restrained navy with borderless terminal grids for projects. The original reference informed the simplicity; the layout and components have their own identity.
+Anthony Li's personal site. Next.js App Router, React, and plain CSS, using npm. A full-width split-terminal home: an interactive monochrome ASCII rabbit on the left and a centered block of neofetch-style shell output on the right. The design uses black, white, and restrained navy with one continuous borderless two-column terminal layout for projects. The original reference informed the simplicity; the layout and components have their own identity.
 
 ## Develop
 
@@ -40,14 +40,26 @@ src/
   data/projects.js      project descriptions and links
 public/
   favicon.svg
+  images/               About photo and CanSat album
+  models/               rabbit GLB and license
 ```
 
-There are three direct dependencies: `next`, `react`, and `react-dom`. No component library, CSS framework, icon package, or remote font. `package-lock.json` pins the installation.
+There are four direct dependencies: `next`, `react`, `react-dom`, and `three`. Three.js is loaded only by the home-page rabbit viewer. No component library, CSS framework, icon package, or remote font. `package-lock.json` pins the installation.
 
 ## Content
 
 Project information comes from the supplied GitHub profile and details provided in chat. Edit `src/data/projects.js` to change project content. The résumé is intentionally left blank. The blog has no placeholder posts; add future routes under `src/app/blog/`.
 
-The home page reserves an empty `pre[data-ascii-stage]` for future ASCII art. For animations or a C++ fluid simulation, add an isolated client component and load it only where needed. Emscripten's generated JavaScript/WebAssembly assets can go in `public/fluid/`. The current template does not implement these future experiments.
+The home page renders the supplied animated rabbit as monochrome ASCII, using larger 16px characters and short directional fur strokes. Stable jitter varies the texture without frame-to-frame random flicker. Drag or use arrow keys to orbit within restrained bounds; drag inertia decays over 2.8 seconds. Wheel/pinch zoom is disabled. Reduced-motion preferences pause animation automatically.
+
+The temporary `[camera setup]` panel allows unrestricted rotation, elevation, and camera distance adjustments. Click `get camera values`, then `copy values` to send the chosen degree-based JSON preset back. The panel will be removed once that preset is selected. The default is in `src/lib/ascii-rabbit.js` as `INITIAL_VIEW`. `npm test` checks the directional fur shading, transparent background, highlights, shadow density, and stable variation.
+
+For a C++ fluid simulation, add an isolated client component and load it only where needed. Emscripten's generated JavaScript/WebAssembly assets can go in `public/fluid/`. The current template does not implement this future experiment.
 
 The site is branded for `0xc0ffee.ca`; custom-domain/DNS configuration is still pending.
+
+## Photos and model
+
+The CanSat album starts with IMG_2113, followed by 3949 (1) and IMG_2125. Its arrows cycle through the photos; opening a photo shows the complete image and supports arrow keys/Escape. The About image is converted from the supplied IMG_3766 HEIC. Original files remain in the local ignored temp folder.
+
+The rabbit is based on [RABBIT - Realistic 3D Model (DEMO FREE)](https://sketchfab.com/3d-models/rabbit-realistic-3d-model-demo-free-d70284ea0d7644988bdcd327c3ffb59a) by [WildMesh 3D](https://sketchfab.com/WildMesh_3D), licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). The material is simplified for monochrome rendering; geometry and animation are retained. Attribution appears beside the copyright in the bottom-left footer and the original license is included in public/models/rabbit.LICENSE.txt.

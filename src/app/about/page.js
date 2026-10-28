@@ -2,29 +2,22 @@ import CommandLine from '../../components/CommandLine';
 
 export const metadata = {
   title: 'About',
-  description: 'About Anthony Li, a computer science student at UofT interested in ML, algorithms, and game development.',
+  description: 'A little about Anthony Li.',
 };
 
 export default function About() {
   return (
-    <div className="page-content">
+    <section className="page-content about-page" aria-labelledby="about-title">
       <CommandLine>cat about.txt</CommandLine>
-      <article className="prose">
-        <h1 className="page-title">about.txt</h1>
-        <p>I&apos;m a computer science student at the University of Toronto, based in Toronto, Canada. I&apos;m mostly into machine learning, algorithms, and building things from scratch to understand how they work.</p>
-        <p>I led software development for the <a href="/projects/#cansat">CanSat Design Challenge</a>, working on computer vision and mission software under tight hardware constraints. I also led a 12-person team building <a href="/projects/#mayhem">Mayhem</a>, a multiplayer game with over 200 players.</p>
-        <p>Recently, I&apos;ve been exploring <a href="/projects/#compact-ai-text-detectors">compact AI text detectors</a> through an independent CS229 project. I usually work with C++, Python, Lua/Luau, Java, JavaScript, and C#.</p>
-        <p>Outside of code, I like lifting, running, and occasionally talking myself into a 100 km bike ride.</p>
-        <h2>Leadership &amp; achievements</h2>
-        <ul>
-          <li>Canadian Computing Competition Senior Honour Roll and Senior/Junior Distinction.</li>
-          <li>Third place in UAPC 2025 Division 2.</li>
-          <li>CanSat Educational Outreach Award with the team.</li>
-          <li>Led robotics, computer science, and mathematics activities for student communities of 20–50+ members.</li>
-        </ul>
-        <p className="about-contact">GitHub: <a href="https://github.com/anthonyyunli">anthonyyunli</a></p>
-        {/* Résumé intentionally left blank. Add a link when ready. */}
-      </article>
-    </div>
+      <h1 className="page-title" id="about-title">about.txt</h1>
+      <div className="about-layout">
+        <img className="about-photo" src="/images/about.webp" alt="Anthony at an event, wearing a Santa hat." width={1200} height={900} decoding="async" />
+        <div className="about-copy">
+          <p>I&apos;m Anthony, a CS student at UofT. I like ML, algorithms, and building things from scratch. I&apos;ve worked on CanSat, led Mayhem, and lately been experimenting with compact text detectors.</p>
+          <p>Outside of code, I lift, run, and occasionally commit to an unnecessarily long bike ride.</p>
+        </div>
+      </div>
+      {/* Résumé intentionally left blank. */}
+    </section>
   );
 }

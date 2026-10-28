@@ -24,7 +24,7 @@ body {
 main { flex: 1; display: flex; flex-direction: column; }
 a { color: inherit; text-decoration: none; text-underline-offset: 5px; }
 a:hover { color: #fff; text-decoration: underline; }
-a:focus-visible { outline: 1px solid var(--accent); outline-offset: 5px; }
+a:focus-visible, button:focus-visible { outline: 1px solid var(--accent); outline-offset: 5px; }
 h1, h2, p { margin-top: 0; }
 ::selection { background: var(--accent); color: var(--background); }
 .skip-link { position: fixed; left: 16px; top: -100px; z-index: 10; background: var(--foreground); color: var(--background); padding: 8px 12px; }
@@ -50,12 +50,11 @@ h1, h2, p { margin-top: 0; }
 .prompt-dollar { color: var(--subtle); }
 .command-text { color: var(--foreground); }
 
-/* Equal terminal panes fill the home screen; ASCII is deliberately empty. */
+/* A single terminal canvas, split evenly between the rabbit and shell output. */
 .home { flex: 1; width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .terminal-pane { min-width: 0; display: flex; flex-direction: column; }
-.ascii-stage { flex: 1; display: grid; place-items: center; min-height: 260px; margin: 0; padding: 24px; overflow: hidden; font-family: inherit; font-size: 12px; line-height: 1.3; }
 .shell-content { flex: 1; display: grid; place-items: center; padding: 72px 24px; }
-.home-inner { width: 100%; max-width: 400px; text-align: left; }
+.home-inner { width: 100%; max-width: 560px; text-align: left; }
 .home .command-line { justify-content: flex-start; margin-bottom: 14px; }
 .home h1 { font-size: clamp(26px, 3vw, 32px); font-weight: 500; letter-spacing: -1.4px; line-height: 1.3; margin: 0; }
 .home-directory { margin-top: 40px; }
@@ -68,13 +67,10 @@ h1, h2, p { margin-top: 0; }
 .page-content { width: 100%; max-width: 900px; margin-inline: auto; padding: 52px 32px 64px; }
 .page-title { font-size: 26px; font-weight: 400; line-height: 1.4; margin: 0 0 34px; letter-spacing: -.6px; }
 .projects-page { max-width: 1280px; }
-.project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
-.project-entry { min-width: 0; display: flex; flex-direction: column; background: var(--surface); scroll-margin-top: 24px; }
-.project-entry:target { outline: 1px solid var(--accent); outline-offset: -1px; }
-.project-bar { min-height: 38px; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 9px 20px; background: var(--surface); color: var(--subtle); font-size: 10px; }
-.project-bar span:first-child { overflow-wrap: anywhere; }
-.project-bar span:last-child { flex-shrink: 0; }
-.project-body { flex: 1; display: flex; flex-direction: column; padding: 24px; }
+.project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 64px 72px; }
+.project-entry { min-width: 0; display: flex; flex-direction: column; background: transparent; scroll-margin-top: 24px; }
+.project-entry:target h2 { text-decoration: underline; text-underline-offset: 6px; }
+.project-body { flex: 1; display: flex; flex-direction: column; padding: 0; }
 .project-entry h2 { font-size: 18px; font-weight: 400; line-height: 1.5; margin-bottom: 10px; }
 .project-entry p { color: var(--muted); font-size: 13px; line-height: 1.9; margin-bottom: 18px; }
 .project-entry .project-role { color: var(--subtle); font-size: 11px; margin-bottom: 14px; }
@@ -98,18 +94,72 @@ h1, h2, p { margin-top: 0; }
   .site-header, .site-footer { padding-inline: 20px; }
   .site-header { min-height: 96px; flex-direction: column; justify-content: center; align-items: flex-start; gap: 10px; }
   .site-header nav { gap: 17px; font-size: 12px; margin-left: -7px; }
-  .home { grid-template-columns: 1fr; grid-template-rows: minmax(180px, .8fr) minmax(340px, 1fr); }
-  .ascii-stage { min-height: 140px; }
+  .home { grid-template-columns: 1fr; grid-template-rows: auto auto; }
   .shell-content { padding: 40px 22px; }
   .home h1 { font-size: 32px; }
   .command-line { font-size: 11px; }
   .page-content { padding: 36px 20px 48px; }
   .page-title { font-size: 24px; margin-bottom: 28px; }
   .project-grid { grid-template-columns: 1fr; }
-  .project-body { padding: 22px; }
+  .project-body { padding: 0; }
   .project-entry h2 { font-size: 17px; }
   .project-entry p { font-size: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .cursor { animation: none; }
 }
+
+/* Projects share one borderless two-column output area. */
+.project-entry .project-path { color: var(--subtle); font-size: 10px; margin: 0 0 14px; }
+.projects-page { max-width: 1200px; }
+.project-bottom { margin-top: 2px; padding-top: 14px; }
+
+/* A small inline album; opening a photo preserves its complete composition. */
+.photo-album { margin: 6px 0 0; }
+.album-preview { display: block; width: 100%; aspect-ratio: 16 / 10; max-height: 260px; padding: 0; border: 0; background: transparent; cursor: zoom-in; overflow: hidden; }
+.album-preview img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.album-caption { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 7px; color: var(--subtle); font-size: 10px; }
+.album-navigation { display: flex; align-items: center; gap: 8px; }
+.album-navigation button, .album-close { border: 0; padding: 4px 7px; min-height: 32px; background: transparent; color: var(--foreground); font: inherit; cursor: pointer; }
+.album-navigation button:hover, .album-close:hover { text-decoration: underline; }
+.album-dialog { border: 0; padding: 20px; width: min(95vw, 1200px); max-width: 95vw; max-height: 94svh; background: var(--background); color: var(--foreground); }
+.album-dialog::backdrop { background: rgba(0, 0, 0, .88); }
+.album-dialog-content > img { display: block; width: auto; height: auto; max-width: 100%; max-height: 73svh; margin-inline: auto; object-fit: contain; }
+.album-close { display: block; margin: 0 0 8px auto; font-size: 11px; }
+
+.about-page { max-width: 1120px; }
+.about-layout { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); align-items: start; gap: 40px; }
+.about-photo { display: block; width: 100%; height: auto; }
+.about-copy p { margin: 0 0 20px; color: var(--muted); font-size: 13px; line-height: 1.95; }
+
+/* Only monochrome characters from the rendered model are shown. */
+.ascii-pane { justify-content: center; }
+.ascii-rabbit { width: 100%; margin: auto 0; padding: 0; }
+.rabbit-viewport { position: relative; display: grid; place-items: center; width: 100%; height: clamp(300px, 65vh, 620px); min-width: 0; overflow: hidden; touch-action: none; cursor: grab; }
+.rabbit-viewport:active { cursor: grabbing; }
+.rabbit-viewport:focus-visible { outline: none; }
+.rabbit-viewport:focus-visible .rabbit-ascii { filter: brightness(1.15); }
+.rabbit-ascii { pointer-events: none; user-select: none; flex-shrink: 0; }
+.camera-setup { position: fixed; right: 24px; bottom: 64px; z-index: 5; font-size: 11px; }
+.camera-setup button { background: transparent; border: 0; padding: 7px 0; color: var(--muted); font: inherit; cursor: pointer; }
+.camera-setup button:hover { color: var(--foreground); text-decoration: underline; }
+.camera-toggle { display: block; margin-left: auto; }
+.camera-panel { width: min(300px, calc(100vw - 40px)); padding: 18px; background: var(--surface); box-shadow: 0 8px 32px #0008; }
+.camera-panel p { margin: 0 0 16px; color: var(--foreground); }
+.camera-panel label { display: flex; justify-content: space-between; gap: 16px; margin-top: 8px; color: var(--muted); }
+.camera-panel input { display: block; width: 100%; margin: 9px 0 15px; accent-color: var(--accent); }
+.camera-panel textarea { display: block; width: 100%; margin-top: 10px; padding: 9px; border: 0; background: var(--background); color: var(--foreground); font: inherit; resize: none; }
+.rabbit-status { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 11px; color: var(--subtle); white-space: nowrap; }
+
+@media (max-width: 767px) {
+  .project-grid { gap: 48px; }
+  .about-layout { grid-template-columns: 1fr; gap: 28px; }
+  .about-photo { max-width: 560px; }
+  .ascii-rabbit { padding: 16px 20px 0; }
+  .rabbit-viewport { height: 340px; }
+  .shell-content { min-height: 270px; padding: 28px 24px 56px; }
+}
+
+.footer-attribution { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 18px; }
+.rabbit-attribution { color: var(--subtle); }
+@media (max-width: 767px) { .site-footer { align-items: flex-end; } .footer-attribution { max-width: 85%; } }

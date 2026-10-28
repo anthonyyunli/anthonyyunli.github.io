@@ -7,3 +7,6 @@ out/
 .sites/
 *.tar.gz
 *.tgz
+
+# Local source assets; optimized copies live in public/.
+temp/

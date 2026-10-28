@@ -1,10 +1,11 @@
 import CommandLine from '../components/CommandLine';
+import AsciiRabbit from '../components/AsciiRabbit';
 
 export default function Home() {
   return (
     <section className="home" aria-labelledby="home-title">
-      <div className="terminal-pane ascii-pane" aria-hidden="true">
-        <pre className="ascii-stage" data-ascii-stage />
+      <div className="terminal-pane ascii-pane">
+        <AsciiRabbit />
       </div>
       <div className="terminal-pane shell-pane">
         <div className="shell-content">
