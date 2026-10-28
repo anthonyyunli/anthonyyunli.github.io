@@ -11,6 +11,7 @@ export default function ProjectEntry({ project }) {
           <dt>stack</dt><dd>{project.stack}</dd>
         </dl>
         <p className="project-description">{project.description}</p>
+        {project.image && <img className="project-image" src={project.image.src} alt={project.image.alt} width={project.image.width} height={project.image.height} loading="lazy" decoding="async" />}
         {project.photos && <PhotoAlbum photos={project.photos} />}
       </div>
     </article>

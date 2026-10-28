@@ -9,6 +9,7 @@
 }
 
 * { box-sizing: border-box; }
+html { scrollbar-gutter: stable; }
 body {
   margin: 0;
   min-height: 100svh;
@@ -65,9 +66,8 @@ h1, h2, p { margin-top: 0; }
 .cursor { display: inline-block; width: 8px; height: 15px; background: var(--foreground); vertical-align: -3px; animation: blink 1.2s steps(1, end) infinite; }
 @keyframes blink { 0%, 65% { opacity: 1; } 66%, 100% { opacity: 0; } }
 
-.page-content { width: 100%; max-width: 900px; margin-inline: auto; padding: 52px 32px 64px; }
+.page-content { width: 100%; max-width: 1200px; margin-inline: auto; padding: 52px 32px 64px; }
 .page-title { font-size: 26px; font-weight: 400; line-height: 1.4; margin: 0 0 34px; letter-spacing: -.6px; }
-.projects-page { max-width: 1200px; }
 .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 32px 56px; }
 .project-entry { min-width: 0; display: flex; flex-direction: column; background: transparent; scroll-margin-top: 24px; }
 .project-path { align-self: flex-start; margin-bottom: 5px; font-size: 13px; color: var(--accent); }
@@ -78,6 +78,7 @@ h1, h2, p { margin-top: 0; }
 .project-meta dt { color: var(--subtle); }
 .project-meta dd { margin: 0; color: var(--muted); }
 .project-entry p { color: var(--muted); font-size: 12px; line-height: 1.85; margin-bottom: 18px; }
+.project-image { display: block; width: 100%; height: auto; margin-top: 6px; }
 .empty-blog { color: var(--muted); padding-top: 24px; }
 .empty-blog p { margin-bottom: 10px; }
 .entry-count { color: var(--subtle); font-size: 12px; }
@@ -124,7 +125,6 @@ h1, h2, p { margin-top: 0; }
 .album-dialog-content > img { display: block; width: auto; height: auto; max-width: 100%; max-height: 73svh; margin-inline: auto; object-fit: contain; }
 .album-close { display: block; margin: 0 0 8px auto; font-size: 11px; }
 
-.about-page { max-width: 1120px; }
 .about-layout { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); align-items: start; gap: 40px; }
 .about-photo { display: block; width: 100%; height: auto; }
 .about-copy p { margin: 0 0 20px; color: var(--muted); font-size: 13px; line-height: 1.95; }

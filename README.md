@@ -60,6 +60,6 @@ The site is branded for `0xc0ffee.ca`; custom-domain/DNS configuration is still 
 
 ## Photos and model
 
-The CanSat album starts with IMG_2113, followed by 3949 (1) and IMG_2125. Its arrows cycle through the photos; opening a photo shows the complete image and supports arrow keys/Escape. The About image is converted from the supplied IMG_3766 HEIC. Original files remain in the local ignored temp folder.
+The CanSat album starts with IMG_2113, followed by 3949 (1) and IMG_2125. Its arrows cycle through the photos; opening a photo shows the complete image and supports arrow keys/Escape. The About portrait uses the supplied IMG_3499, replacing IMG_3766. Mayhem uses the supplied image (1).png screenshot. Images are optimized as WebP. Original files remain in the local ignored temp folder.
 
 The rabbit is based on [RABBIT - Realistic 3D Model (DEMO FREE)](https://sketchfab.com/3d-models/rabbit-realistic-3d-model-demo-free-d70284ea0d7644988bdcd327c3ffb59a) by [WildMesh 3D](https://sketchfab.com/WildMesh_3D), licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). The material is simplified for monochrome rendering; geometry and animation are retained. Attribution appears beside the copyright in the bottom-left footer and the original license is included in public/models/rabbit.LICENSE.txt.

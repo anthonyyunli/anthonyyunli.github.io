@@ -19,6 +19,12 @@ export const projects = [
     stack: 'Lua/Luau, Internal Tooling',
     description: 'A multiplayer party FPS with unusual weapons and abilities. Led a 12-person team across code, art, animation, and music; played by over 200 players.',
     href: 'https://github.com/Roblox-MAYHEM/Game',
+    image: {
+      src: '/images/mayhem.webp',
+      alt: 'A colorful industrial Mayhem map with cranes, platforms, and shipping containers.',
+      width: 1600,
+      height: 716,
+    },
   },
   {
     id: 'cs229',
