@@ -50,7 +50,7 @@ h1, h2, p { margin-top: 0; }
 .prompt-dollar { color: var(--subtle); }
 .command-text { color: var(--foreground); }
 
-/* A single terminal canvas, split evenly between the rabbit and shell output. */
+/* One terminal canvas, split evenly between the rabbit and shell output. */
 .home { flex: 1; width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .terminal-pane { min-width: 0; display: flex; flex-direction: column; }
 .shell-content { flex: 1; display: grid; place-items: center; padding: 72px 24px; }
@@ -135,28 +135,19 @@ h1, h2, p { margin-top: 0; }
 /* Only monochrome characters from the rendered model are shown. */
 .ascii-pane { justify-content: center; }
 .ascii-rabbit { width: 100%; margin: auto 0; padding: 0; }
-.rabbit-viewport { position: relative; display: grid; place-items: center; width: 100%; height: clamp(300px, 65vh, 620px); min-width: 0; overflow: hidden; touch-action: none; cursor: grab; }
+.rabbit-viewport { position: relative; display: grid; place-items: center; width: 100%; height: clamp(380px, min(calc(100svh - 176px), 55vw), 900px); min-width: 0; overflow: hidden; touch-action: none; cursor: grab; }
 .rabbit-viewport:active { cursor: grabbing; }
 .rabbit-viewport:focus-visible { outline: none; }
 .rabbit-viewport:focus-visible .rabbit-ascii { filter: brightness(1.15); }
 .rabbit-ascii { pointer-events: none; user-select: none; flex-shrink: 0; }
-.camera-setup { position: fixed; right: 24px; bottom: 64px; z-index: 5; font-size: 11px; }
-.camera-setup button { background: transparent; border: 0; padding: 7px 0; color: var(--muted); font: inherit; cursor: pointer; }
-.camera-setup button:hover { color: var(--foreground); text-decoration: underline; }
-.camera-toggle { display: block; margin-left: auto; }
-.camera-panel { width: min(300px, calc(100vw - 40px)); padding: 18px; background: var(--surface); box-shadow: 0 8px 32px #0008; }
-.camera-panel p { margin: 0 0 16px; color: var(--foreground); }
-.camera-panel label { display: flex; justify-content: space-between; gap: 16px; margin-top: 8px; color: var(--muted); }
-.camera-panel input { display: block; width: 100%; margin: 9px 0 15px; accent-color: var(--accent); }
-.camera-panel textarea { display: block; width: 100%; margin-top: 10px; padding: 9px; border: 0; background: var(--background); color: var(--foreground); font: inherit; resize: none; }
 .rabbit-status { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 11px; color: var(--subtle); white-space: nowrap; }
 
 @media (max-width: 767px) {
   .project-grid { gap: 48px; }
   .about-layout { grid-template-columns: 1fr; gap: 28px; }
   .about-photo { max-width: 560px; }
-  .ascii-rabbit { padding: 16px 20px 0; }
-  .rabbit-viewport { height: 340px; }
+  .ascii-rabbit { padding: 0; }
+  .rabbit-viewport { height: clamp(340px, 100vw, 480px); }
   .shell-content { min-height: 270px; padding: 28px 24px 56px; }
 }
 

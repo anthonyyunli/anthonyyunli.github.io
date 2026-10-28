@@ -3,8 +3,9 @@ import { FurAsciiEffect } from './FurAsciiEffect.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-// Temporary camera setup exports these same degree-based values.
-const INITIAL_VIEW = { azimuth: 76, elevation: 11, distance: 5.35 };
+// Selected camera preset, in degrees and normalized model units.
+const INITIAL_VIEW = { azimuth: 328.1, elevation: 11.5, distance: 4.7 };
+const GLIDE_SECONDS = 1.1;
 
 export async function createAsciiRabbit(host, signal) {
   const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
@@ -32,21 +33,17 @@ export async function createAsciiRabbit(host, signal) {
   controls.enablePan = false;
   controls.enableZoom = false;
   controls.enableDamping = !motion.matches;
-  controls.dampingFactor = .006;
-  controls.rotateSpeed = .55;
+  controls.dampingFactor = 1 - Math.exp(-1 / (60 * GLIDE_SECONDS));
+  controls.rotateSpeed = .4;
   controls.target.set(0, 0, 0);
   controls.update();
 
-  let editing = false;
-  let anchorAzimuth = THREE.MathUtils.degToRad(INITIAL_VIEW.azimuth);
-  let anchorPolar = THREE.MathUtils.degToRad(90 - INITIAL_VIEW.elevation);
-  function constrainView() {
-    controls.minAzimuthAngle = editing ? -Infinity : anchorAzimuth - .85;
-    controls.maxAzimuthAngle = editing ? Infinity : anchorAzimuth + .85;
-    controls.minPolarAngle = editing ? THREE.MathUtils.degToRad(25) : Math.max(.1, anchorPolar - .32);
-    controls.maxPolarAngle = editing ? THREE.MathUtils.degToRad(105) : Math.min(Math.PI - .1, anchorPolar + .32);
-  }
-  constrainView();
+  const anchorAzimuth = controls.getAzimuthalAngle();
+  const anchorPolar = controls.getPolarAngle();
+  controls.minAzimuthAngle = anchorAzimuth - THREE.MathUtils.degToRad(18);
+  controls.maxAzimuthAngle = anchorAzimuth + THREE.MathUtils.degToRad(18);
+  controls.minPolarAngle = anchorPolar - THREE.MathUtils.degToRad(8);
+  controls.maxPolarAngle = anchorPolar + THREE.MathUtils.degToRad(8);
 
   let model;
   let mixer;
@@ -144,8 +141,8 @@ export async function createAsciiRabbit(host, signal) {
       const delta = Math.min((now - lastFrame) / 1000, 0.1);
       lastFrame = now;
       if (!visible || document.hidden) return;
-      // A 2.8 second decay feels like gliding on ice, independent of refresh rate.
-      controls.dampingFactor = 1 - Math.exp(-delta / 2.8);
+      // Smooth coasting with a shorter tail, independent of refresh rate.
+      controls.dampingFactor = 1 - Math.exp(-delta / GLIDE_SECONDS);
       controls.update(delta);
       if (!paused) { mixer.update(delta); dirty = true; }
       if (dirty && now - lastRender >= 1000 / 24) {
@@ -159,39 +156,6 @@ export async function createAsciiRabbit(host, signal) {
 
     return {
       dispose,
-      getView() {
-        const position = new THREE.Spherical().setFromVector3(camera.position.clone().sub(controls.target));
-        const round = (n) => Math.round(n * 100) / 100;
-        return {
-          azimuth: round((THREE.MathUtils.radToDeg(position.theta) + 360) % 360),
-          elevation: round(90 - THREE.MathUtils.radToDeg(position.phi)),
-          distance: round(position.radius),
-        };
-      },
-      setEditing(value) {
-        editing = value;
-        if (!editing) {
-          anchorAzimuth = controls.getAzimuthalAngle();
-          anchorPolar = controls.getPolarAngle();
-        }
-        constrainView();
-      },
-      setView(view) {
-        // Flush the previous drag's inertia before applying a slider value.
-        const position = camera.position.clone();
-        const damping = controls.enableDamping;
-        controls.enableDamping = false;
-        controls.update();
-        camera.position.copy(position);
-        camera.position.setFromSphericalCoords(
-          THREE.MathUtils.clamp(view.distance, 2.4, 12),
-          THREE.MathUtils.degToRad(90 - THREE.MathUtils.clamp(view.elevation, -15, 65)),
-          THREE.MathUtils.degToRad(view.azimuth));
-        camera.position.add(controls.target);
-        controls.update();
-        controls.enableDamping = damping;
-        dirty = true;
-      },
       handleKey(key) {
         if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(key)) return false;
         const offset = camera.position.clone().sub(controls.target);

@@ -1,6 +1,10 @@
 import * as THREE from 'three';
 import { furCharacter } from './fur-shading.js';
 
+const FONT_SIZE = 14;
+const LINE_HEIGHT = 15;
+const FONT_FAMILY = '"Liberation Mono", Consolas, monospace';
+
 // Sample one rendered pixel per character, rather than rendering a full-size
 // canvas and throwing most pixels away. The alpha channel preserves silhouettes.
 export class FurAsciiEffect {
@@ -10,13 +14,13 @@ export class FurAsciiEffect {
     this.domElement.className = 'rabbit-ascii';
     this.domElement.setAttribute('aria-hidden', 'true');
     Object.assign(this.domElement.style, {
-      font: '16px / 17px "Liberation Mono", Consolas, monospace',
+      font: `${FONT_SIZE}px / ${LINE_HEIGHT}px ${FONT_FAMILY}`,
       margin: '0', color: '#e5e5e5', background: 'transparent',
       whiteSpace: 'pre', letterSpacing: '0', overflow: 'hidden',
     });
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d', { willReadFrequently: true });
-    this.context.font = '16px "Liberation Mono", Consolas, monospace';
+    this.context.font = `${FONT_SIZE}px ${FONT_FAMILY}`;
     this.characterWidth = this.context.measureText('M').width;
     this.axis = new THREE.Vector3(0, 0, 1);
     this.projected = new THREE.Vector3();
@@ -25,12 +29,12 @@ export class FurAsciiEffect {
 
   setSize(width, height) {
     this.columns = Math.max(1, Math.floor(width / this.characterWidth));
-    this.rows = Math.max(1, Math.floor(height / 17));
+    this.rows = Math.max(1, Math.floor(height / LINE_HEIGHT));
     this.canvas.width = this.columns;
     this.canvas.height = this.rows;
     this.renderer.setSize(this.columns, this.rows, false);
     this.domElement.style.width = `${this.columns * this.characterWidth}px`;
-    this.domElement.style.height = `${this.rows * 17}px`;
+    this.domElement.style.height = `${this.rows * LINE_HEIGHT}px`;
   }
 
   render(scene, camera) {
