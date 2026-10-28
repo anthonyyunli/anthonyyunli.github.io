@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 // Selected camera preset, in degrees and normalized model units.
-const INITIAL_VIEW = { azimuth: 328.1, elevation: 11.5, distance: 4.7 };
+const INITIAL_VIEW = { azimuth: 328.1, elevation: 11.5, distance: 8.2 };
 const GLIDE_SECONDS = 1.1;
 
 export async function createAsciiRabbit(host, signal) {

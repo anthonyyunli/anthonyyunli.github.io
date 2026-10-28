@@ -52,7 +52,7 @@ Project information comes from the supplied GitHub profile and details provided 
 
 The home page renders the supplied animated rabbit as monochrome ASCII, using 14px characters and short directional fur strokes. The taller viewport retains an even 50/50 desktop split with the shell output. Stable jitter varies the texture without frame-to-frame random flicker. Drag or use arrow keys to orbit up to 18° horizontally and 8° vertically around the selected view; drag inertia decays over 1.1 seconds. Wheel/pinch zoom is disabled. Reduced-motion preferences pause animation automatically.
 
-The selected camera preset is `{ azimuth: 328.1, elevation: 11.5, distance: 4.7 }`, stored in `src/lib/ascii-rabbit.js` as `INITIAL_VIEW`. The temporary camera setup panel has been removed. `npm test` checks the directional fur shading, transparent background, highlights, shadow density, and stable variation.
+The selected camera angle is `{ azimuth: 328.1, elevation: 11.5 }`, with distance pulled back slightly to `5.2`, stored in `src/lib/ascii-rabbit.js` as `INITIAL_VIEW`. The temporary camera setup panel has been removed. `npm test` checks the directional fur shading, transparent background, highlights, shadow density, and stable variation.
 
 For a C++ fluid simulation, add an isolated client component and load it only where needed. Emscripten's generated JavaScript/WebAssembly assets can go in `public/fluid/`. The current template does not implement this future experiment.
 
