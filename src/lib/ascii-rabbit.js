@@ -7,6 +7,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 const INITIAL_VIEW = { azimuth: 332.1, elevation: -5, distance: 5.7 };
 const GLIDE_SECONDS = 1.1;
 const ORBIT_STEP = THREE.MathUtils.degToRad(2);
+const FRAME_INTERVAL = 1000 / 12;
 
 function disposeModel(root) {
   root?.traverse((object) => {
@@ -161,7 +162,7 @@ export async function createAsciiRabbit(host, signal) {
         mixer.update(delta);
         dirty = true;
       }
-      if (dirty && now - lastRender >= 1000 / 24) {
+      if (dirty && now - lastRender >= FRAME_INTERVAL) {
         render();
         dirty = false;
         lastRender = now;

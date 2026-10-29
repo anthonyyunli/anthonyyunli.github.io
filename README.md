@@ -60,7 +60,7 @@ The blog is intentionally empty and the résumé is intentionally absent.
 
 `createAsciiRabbit(host, signal)` initializes the viewer. Aborting the signal is the single teardown path; the viewer releases its observers, input listeners, animation frame, model, and WebGL context. A failed model load uses the same cleanup. React does not keep a second controller or forward keyboard events.
 
-Dragging orbits within bounds in 2° steps, with easing underneath. Edit `ORBIT_STEP` to change the step size. Arrow keys keep their normal browser behavior; wheel/pinch zoom stays disabled. Reduced motion freezes animation and removes easing. Hidden or offscreen viewers stop rendering. Three.js loads only on Home.
+Dragging orbits within bounds in 2° steps, with easing underneath. ASCII redraws at most 12 times per second, so both orbiting and animation advance in timed steps. Edit `ORBIT_STEP` and `FRAME_INTERVAL` to adjust them. Arrow keys keep their normal browser behavior; wheel/pinch zoom stays disabled. Reduced motion freezes animation and removes easing. Hidden or offscreen viewers stop rendering. Three.js loads only on Home.
 
 For a future C++ fluid simulation, add a separate client component and keep generated JavaScript/WebAssembly assets in `public/fluid/`. There is no simulation framework to work around.
 
