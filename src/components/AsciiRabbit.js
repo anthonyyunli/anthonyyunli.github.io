@@ -36,7 +36,7 @@ export default function AsciiRabbit() {
         ref={viewport}
         tabIndex={0}
         role="region"
-        aria-label="Animated monochrome ASCII rabbit. Drag or use arrow keys to orbit the camera."
+        aria-label="Animated monochrome ASCII rabbit. Drag to orbit the camera."
         aria-busy={status === 'loading'}
       >
         {status !== 'ready' && (

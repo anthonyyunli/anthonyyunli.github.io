@@ -6,6 +6,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // Selected camera preset, in degrees and normalized model units.
 const INITIAL_VIEW = { azimuth: 332.1, elevation: -5, distance: 5.7 };
 const GLIDE_SECONDS = 1.1;
+const ORBIT_STEP = THREE.MathUtils.degToRad(2);
 
 function disposeModel(root) {
   root?.traverse((object) => {
@@ -47,7 +48,8 @@ export async function createAsciiRabbit(host, signal) {
   host.appendChild(effect.domElement);
 
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const controls = new OrbitControls(camera, host);
+  // Keep input smooth; snap only the rendered view so small drags accumulate.
+  const controls = new OrbitControls(camera.clone(), host);
   controls.enablePan = false;
   controls.enableZoom = false;
   controls.enableDamping = !motion.matches;
@@ -95,21 +97,12 @@ export async function createAsciiRabbit(host, signal) {
   }
   motion.addEventListener('change', onMotionChange);
 
-  function onKeyDown(event) {
-    const { key } = event;
-    if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(key)) return;
-    event.preventDefault();
-
-    const offset = camera.position.clone().sub(controls.target);
-    const spherical = new THREE.Spherical().setFromVector3(offset);
-    if (key === 'ArrowLeft') spherical.theta -= 0.12;
-    if (key === 'ArrowRight') spherical.theta += 0.12;
-    if (key === 'ArrowUp') spherical.phi -= 0.12;
-    if (key === 'ArrowDown') spherical.phi += 0.12;
-    spherical.phi = THREE.MathUtils.clamp(spherical.phi, controls.minPolarAngle, controls.maxPolarAngle);
-    camera.position.copy(controls.target).add(offset.setFromSpherical(spherical));
-    controls.update();
-    dirty = true;
+  function render() {
+    const theta = anchorAzimuth + Math.round((controls.getAzimuthalAngle() - anchorAzimuth) / ORBIT_STEP) * ORBIT_STEP;
+    const phi = anchorPolar + Math.round((controls.getPolarAngle() - anchorPolar) / ORBIT_STEP) * ORBIT_STEP;
+    camera.position.setFromSphericalCoords(INITIAL_VIEW.distance, phi, theta);
+    camera.lookAt(controls.target);
+    effect.render(scene, camera);
   }
 
   function dispose() {
@@ -119,7 +112,6 @@ export async function createAsciiRabbit(host, signal) {
     resizeObserver.disconnect();
     intersectionObserver.disconnect();
     motion.removeEventListener('change', onMotionChange);
-    host.removeEventListener('keydown', onKeyDown);
     signal.removeEventListener('abort', dispose);
     controls.removeEventListener('change', markDirty);
     controls.dispose();
@@ -170,13 +162,12 @@ export async function createAsciiRabbit(host, signal) {
         dirty = true;
       }
       if (dirty && now - lastRender >= 1000 / 24) {
-        effect.render(scene, camera);
+        render();
         dirty = false;
         lastRender = now;
       }
     }
-    effect.render(scene, camera);
-    host.addEventListener('keydown', onKeyDown);
+    render();
     frame = requestAnimationFrame(animate);
   } catch (error) {
     dispose();
