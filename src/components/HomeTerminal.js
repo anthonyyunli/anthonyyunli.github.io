@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const destinations = {
   '': '/',
@@ -16,6 +16,28 @@ const destinations = {
 
 export default function HomeTerminal() {
   const [history, setHistory] = useState([]);
+  const commandInput = useRef(null);
+
+  useEffect(() => {
+    function startTyping(event) {
+      if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey ||
+          event.isComposing || !/^[a-z0-9]$/i.test(event.key)) return;
+
+      const target = event.target;
+      if (target instanceof HTMLElement &&
+          (target.isContentEditable || target.closest('input, textarea, select'))) return;
+
+      const field = commandInput.current;
+      event.preventDefault();
+      field.focus({ preventScroll: true });
+      if (field.value.length < field.maxLength) {
+        field.setRangeText(event.key, field.selectionStart, field.selectionEnd, 'end');
+      }
+    }
+
+    window.addEventListener('keydown', startTyping);
+    return () => window.removeEventListener('keydown', startTyping);
+  }, []);
 
   function run(event) {
     event.preventDefault();
@@ -46,11 +68,8 @@ export default function HomeTerminal() {
       case 'clear':
         setHistory([]);
         return;
-      case 'help':
-        output = 'whoami · ls · cd <about|blog|projects> · clear';
-        break;
       default:
-        output = `${command}: command not found. Try help.`;
+        output = `${command}: command not found`;
     }
 
     setHistory((previous) => [...previous.slice(-7), { command: input, output }]);
@@ -70,6 +89,7 @@ export default function HomeTerminal() {
         <span className="prompt-dollar" aria-hidden="true">$</span>
         <span className="terminal-field">
           <input
+            ref={commandInput}
             className="terminal-input"
             name="command"
             aria-label="Terminal command"
