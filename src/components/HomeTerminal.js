@@ -1,6 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import CommandLine, { Prompt } from './CommandLine';
+import DirectoryLinks from './DirectoryLinks';
+import FakeRemoval from './FakeRemoval';
 
 const destinations = {
   '': '/',
@@ -16,6 +19,8 @@ const destinations = {
 
 export default function HomeTerminal() {
   const [history, setHistory] = useState([]);
+  const [active, setActive] = useState(false);
+  const [busy, setBusy] = useState(false);
   const commandInput = useRef(null);
 
   useEffect(() => {
@@ -28,10 +33,12 @@ export default function HomeTerminal() {
           (target.isContentEditable || target.closest('input, textarea, select'))) return;
 
       const field = commandInput.current;
+      if (field.readOnly) return;
       event.preventDefault();
       field.focus({ preventScroll: true });
       if (field.value.length < field.maxLength) {
         field.setRangeText(event.key, field.selectionStart, field.selectionEnd, 'end');
+        field.dispatchEvent(new Event('input', { bubbles: true }));
       }
     }
 
@@ -39,11 +46,19 @@ export default function HomeTerminal() {
     return () => window.removeEventListener('keydown', startTyping);
   }, []);
 
+  function updateCursor() {
+    const field = commandInput.current;
+    field.parentElement.style.setProperty('--cursor-x', `calc(${field.selectionStart}ch - ${field.scrollLeft}px)`);
+    if (field.value) setActive(true);
+  }
+
   function run(event) {
     event.preventDefault();
+    if (busy) return;
     const form = event.currentTarget;
     const input = new FormData(form).get('command').trim();
     form.reset();
+    updateCursor();
     if (!input) return;
 
     const [command, argument] = input.split(/\s+/);
@@ -54,7 +69,7 @@ export default function HomeTerminal() {
         output = 'Anthony Li';
         break;
       case 'ls':
-        output = 'about.txt  blog/  projects/';
+        output = <DirectoryLinks />;
         break;
       case 'cd': {
         const directory = (argument || '').replace(/^~?\//, '').replace(/\/$/, '');
@@ -68,6 +83,16 @@ export default function HomeTerminal() {
       case 'clear':
         setHistory([]);
         return;
+      case 'sudo':
+        output = "Sudo access granted! Just kidding. I don't even know who you are.";
+        break;
+      case 'rm':
+        if (argument === '-rf') {
+          output = <FakeRemoval />;
+          setBusy(true);
+          break;
+        }
+        // Other rm inputs use the same response as unsupported commands.
       default:
         output = `${command}: command not found`;
     }
@@ -80,16 +105,20 @@ export default function HomeTerminal() {
       <div className="terminal-history" aria-live="polite" aria-relevant="additions">
         {history.map(({ command, output }, index) => (
           <div key={index}>
-            <div><span className="prompt-dollar">$</span> {command}</div>
-            <p>{output}</p>
+            <CommandLine>{command}</CommandLine>
+            <div className="terminal-output">{output}</div>
           </div>
         ))}
       </div>
       <form className="terminal-form" onSubmit={run} aria-label="Home terminal">
-        <span className="prompt-dollar" aria-hidden="true">$</span>
+        <Prompt full={active} />
         <span className="terminal-field">
           <input
             ref={commandInput}
+            onInput={updateCursor}
+            onSelect={updateCursor}
+            onScroll={updateCursor}
+            readOnly={busy}
             className="terminal-input"
             name="command"
             aria-label="Terminal command"

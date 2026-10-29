@@ -1,6 +1,7 @@
 import CommandLine from '../components/CommandLine';
 import AsciiRabbit from '../components/AsciiRabbit';
 import HomeTerminal from '../components/HomeTerminal';
+import DirectoryLinks from '../components/DirectoryLinks';
 
 export default function Home() {
   return (
@@ -12,11 +13,7 @@ export default function Home() {
           <h1 id="home-title">Anthony Li</h1>
           <div className="home-directory">
             <CommandLine>ls</CommandLine>
-            <div className="file-list" aria-label="Explore the site">
-              <a href="/about/">about.txt</a>
-              <a href="/blog/">blog/</a>
-              <a href="/projects/">projects/</a>
-            </div>
+            <DirectoryLinks />
           </div>
           <HomeTerminal />
         </div>

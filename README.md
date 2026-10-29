@@ -39,7 +39,9 @@ Pages are server components. Navigation state, the rabbit, photo albums, and the
 
 CSS is grouped by feature, with one mobile breakpoint block at the end. All content pages share `.page-content` to keep prompts aligned. The home split uses `--shell-text-width` to keep the viewport boundary and text width in sync.
 
-The Home prompt activates when you start typing an alphanumeric key, preserving the first character. It ignores keyboard shortcuts and other text fields. Commands are `whoami`, `ls`, `cd about`, `cd blog`, `cd projects`, and `clear`. It keeps the last eight responses in memory. Directory aliases live beside the command handler; navigation uses the same full-page links as the menu.
+The Home prompt activates when you start typing an alphanumeric key, preserving the first character. Its block cursor follows native text selection and scrolling; the full prompt appears after typing begins. It ignores keyboard shortcuts and other text fields. Commands are `whoami`, `ls`, `cd about`, `cd blog`, `cd projects`, and `clear`. It keeps the last eight responses in memory. `DirectoryLinks.js` supplies the same links to Home and `ls`; `CommandLine.js` shares the prompt markup.
+
+`sudo` prints a joke. `rm -rf` mounts `FakeRemoval.js`, which prints fictional paths slowly, accelerates, reveals the joke, and reloads the page. Its timer stops when the component unmounts. These commands only change the page UI.
 
 ## Projects and photos
 
