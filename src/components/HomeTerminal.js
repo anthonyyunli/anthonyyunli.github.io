@@ -20,8 +20,8 @@ const destinations = {
 export default function HomeTerminal() {
   const [history, setHistory] = useState([]);
   const [active, setActive] = useState(false);
-  const [busy, setBusy] = useState(false);
   const commandInput = useRef(null);
+  const busy = history.at(-1)?.removing ?? false;
 
   useEffect(() => {
     function startTyping(event) {
@@ -55,14 +55,15 @@ export default function HomeTerminal() {
   function run(event) {
     event.preventDefault();
     if (busy) return;
-    const form = event.currentTarget;
-    const input = new FormData(form).get('command').trim();
-    form.reset();
+    const field = commandInput.current;
+    const input = field.value.trim();
+    field.value = '';
     updateCursor();
     if (!input) return;
 
     const [command, argument] = input.split(/\s+/);
-    let output;
+    let output = `${command}: command not found`;
+    let removing = false;
 
     switch (command) {
       case 'whoami':
@@ -87,17 +88,12 @@ export default function HomeTerminal() {
         output = "Sudo access granted! Just kidding. I don't even know who you are.";
         break;
       case 'rm':
-        if (argument === '-rf') {
-          output = <FakeRemoval />;
-          setBusy(true);
-          break;
-        }
-        // Other rm inputs use the same response as unsupported commands.
-      default:
-        output = `${command}: command not found`;
+        removing = argument === '-rf';
+        if (removing) output = <FakeRemoval />;
+        break;
     }
 
-    setHistory((previous) => [...previous.slice(-7), { command: input, output }]);
+    setHistory((previous) => [...previous.slice(-7), { command: input, output, removing }]);
   }
 
   return (
@@ -120,9 +116,7 @@ export default function HomeTerminal() {
             onScroll={updateCursor}
             readOnly={busy}
             className="terminal-input"
-            name="command"
             aria-label="Terminal command"
-            placeholder=" "
             autoComplete="off"
             autoCapitalize="none"
             spellCheck={false}

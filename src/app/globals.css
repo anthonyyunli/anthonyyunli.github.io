@@ -270,13 +270,6 @@ h1, h2, p {
   caret-color: transparent;
 }
 
-.terminal-field .cursor {
-  position: absolute;
-  left: var(--cursor-x, 0px);
-  top: 3px;
-  pointer-events: none;
-}
-
 .terminal-removal pre {
   max-height: 240px;
   overflow: auto;
@@ -286,11 +279,13 @@ h1, h2, p {
 }
 
 .cursor {
-  display: inline-block;
+  position: absolute;
+  left: var(--cursor-x, 0px);
+  top: 3px;
   width: 8px;
   height: 15px;
   background: var(--foreground);
-  vertical-align: -3px;
+  pointer-events: none;
   animation: blink 1.2s steps(1, end) infinite;
 }
 

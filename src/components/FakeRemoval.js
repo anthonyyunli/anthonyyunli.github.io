@@ -2,11 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-const paths = [
+const lines = [
   '/bin/bash', '/etc/passwd', '/usr/lib/libc.so.6',
   ...Array.from({ length: 96 }, (_, index) => `/usr/lib/libuniverse-${String(index).padStart(3, '0')}.so`),
   '/dev/null', '/var/log/universe.log', '/home/anthony/.coffee',
-];
+].map((path) => `removing ${path}...`);
 
 export default function FakeRemoval() {
   const [visible, setVisible] = useState(0);
@@ -14,33 +14,26 @@ export default function FakeRemoval() {
   const log = useRef(null);
 
   useEffect(() => {
-    let count = 0;
-    let timer = setTimeout(tick, 350);
+    log.current.scrollTop = log.current.scrollHeight;
+    let timer;
 
-    function tick() {
-      count = Math.min(paths.length, count + (count < 3 ? 1 : 12));
-      setVisible(count);
-      if (count < paths.length) {
-        timer = setTimeout(tick, count <= 3 ? 450 : 45);
-      } else {
-        timer = setTimeout(() => {
-          setFinished(true);
-          timer = setTimeout(() => window.location.reload(), 1600);
-        }, 350);
-      }
+    if (finished) {
+      timer = setTimeout(() => window.location.reload(), 1600);
+    } else if (visible === lines.length) {
+      timer = setTimeout(() => setFinished(true), 350);
+    } else {
+      const delay = visible === 0 ? 350 : visible <= 3 ? 450 : 45;
+      const count = Math.min(lines.length, visible + (visible < 3 ? 1 : 12));
+      timer = setTimeout(() => setVisible(count), delay);
     }
 
     return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    log.current.scrollTop = log.current.scrollHeight;
-  }, [visible]);
+  }, [visible, finished]);
 
   return (
     <div className="terminal-removal">
       <pre ref={log} aria-live="off">
-        {paths.slice(0, visible).map((path) => `removing ${path}...`).join('\n')}
+        {lines.slice(0, visible).join('\n')}
       </pre>
       {finished && <div role="status">jk. Rebooting universe</div>}
     </div>
