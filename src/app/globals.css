@@ -233,6 +233,47 @@ h1, h2, p {
 .idle-prompt {
   margin-top: 34px;
   font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.terminal-history p {
+  margin: 0 0 12px;
+  color: var(--muted);
+  white-space: pre-wrap;
+}
+
+.terminal-form {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.terminal-field {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.terminal-input {
+  width: 100%;
+  border: 0;
+  padding: 0;
+  outline: none;
+  background: transparent;
+  color: var(--foreground);
+  font: inherit;
+}
+
+.terminal-field .cursor {
+  position: absolute;
+  left: 0;
+  top: 3px;
+  pointer-events: none;
+}
+
+.terminal-input:focus + .cursor,
+.terminal-input:not(:placeholder-shown) + .cursor {
+  display: none;
 }
 
 .cursor {

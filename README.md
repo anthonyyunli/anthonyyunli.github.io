@@ -25,6 +25,7 @@ Tests cover deterministic fur shading. The build exports all pages and public as
 | Change | File |
 | --- | --- |
 | Home text and directory links | `src/app/page.js` |
+| Interactive Home commands | `src/components/HomeTerminal.js` |
 | About photo and paragraphs | `src/app/about/page.js` |
 | Blog entries | `src/app/blog/page.js` |
 | Project content, links, and images | `src/data/projects.js` |
@@ -34,9 +35,11 @@ Tests cover deterministic fur shading. The build exports all pages and public as
 | Site metadata | `src/app/layout.js` |
 | Layout, colors, and responsive rules | `src/app/globals.css` |
 
-Pages are server components. Only navigation state, the rabbit, and the photo album need client JavaScript. Small event handlers remain beside the UI they control; there is no state manager or custom-hook layer.
+Pages are server components. Navigation state, the rabbit, photo albums, and the Home prompt use small client components. Event handlers remain beside the UI they control; there is no state manager or custom-hook layer.
 
 CSS is grouped by feature, with one mobile breakpoint block at the end. All content pages share `.page-content` to keep prompts aligned. The home split uses `--shell-text-width` to keep the viewport boundary and text width in sync.
+
+The Home prompt supports `whoami`, `ls`, `cd about`, `cd blog`, and `cd projects`; `help` lists commands and `clear` clears its output. It keeps the last eight responses in memory. Directory aliases live beside the command handler; navigation uses the same full-page links as the menu.
 
 ## Projects and photos
 

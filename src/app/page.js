@@ -1,5 +1,6 @@
 import CommandLine from '../components/CommandLine';
 import AsciiRabbit from '../components/AsciiRabbit';
+import HomeTerminal from '../components/HomeTerminal';
 
 export default function Home() {
   return (
@@ -17,7 +18,7 @@ export default function Home() {
               <a href="/projects/">projects/</a>
             </div>
           </div>
-          <div className="idle-prompt" aria-hidden="true"><span className="prompt-dollar">$</span> <span className="cursor" /></div>
+          <HomeTerminal />
         </div>
       </div>
     </section>

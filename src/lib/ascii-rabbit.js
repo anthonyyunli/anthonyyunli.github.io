@@ -6,7 +6,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // Selected camera preset, in degrees and normalized model units.
 const INITIAL_VIEW = { azimuth: 332.1, elevation: -5, distance: 5.7 };
 const GLIDE_SECONDS = 0.6;
-const ORBIT_STEP = THREE.MathUtils.degToRad(2);
+const ORBIT_STEP = THREE.MathUtils.degToRad(4);
 
 function disposeModel(root) {
   root?.traverse((object) => {
