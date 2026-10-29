@@ -60,7 +60,7 @@ The blog is intentionally empty and the résumé is intentionally absent.
 
 `createAsciiRabbit(host, signal)` initializes the viewer. Aborting the signal is the single teardown path; the viewer releases its observers, input listeners, animation frame, model, and WebGL context. A failed model load uses the same cleanup. React does not keep a second controller or forward keyboard events.
 
-Dragging orbits within bounds in 2° steps, with easing underneath. Only the camera updates at most 12 times per second; the rabbit animation keeps its 24 FPS redraw rate. Edit `ORBIT_STEP` and `ORBIT_INTERVAL` to adjust the camera steps. Arrow keys keep their normal browser behavior; wheel/pinch zoom stays disabled. Reduced motion freezes animation and removes easing. Hidden or offscreen viewers stop rendering. Three.js loads only on Home.
+Dragging orbits within bounds in 2° steps. Damping builds momentum during a drag and lets it decay after release, using a 0.6-second time constant. Camera and rabbit share the 24 FPS redraw loop, without a separate camera timer. Edit `ORBIT_STEP` and `GLIDE_SECONDS` to adjust the feel. Arrow keys keep their normal browser behavior; wheel/pinch zoom stays disabled. Reduced motion freezes animation and removes easing. Hidden or offscreen viewers stop rendering. Three.js loads only on Home.
 
 For a future C++ fluid simulation, add a separate client component and keep generated JavaScript/WebAssembly assets in `public/fluid/`. There is no simulation framework to work around.
 

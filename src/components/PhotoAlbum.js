@@ -17,18 +17,21 @@ export default function PhotoAlbum({ photos, label = 'Project' }) {
     move(event.key === 'ArrowLeft' ? -1 : 1);
   }
 
-  const navigation = (
-    <div className="album-navigation">
-      <button type="button" onClick={() => move(-1)} aria-label={`Previous ${label} photo`}>
-        ←
-      </button>
-      <span aria-live="polite" aria-atomic="true">
-        {String(index + 1).padStart(2, '0')} / {String(photos.length).padStart(2, '0')}
-      </span>
-      <button type="button" onClick={() => move(1)} aria-label={`Next ${label} photo`}>
-        →
-      </button>
-    </div>
+  const caption = (
+    <>
+      <span>{photo.label}</span>
+      <div className="album-navigation">
+        <button type="button" onClick={() => move(-1)} aria-label={`Previous ${label} photo`}>
+          ←
+        </button>
+        <span aria-live="polite" aria-atomic="true">
+          {String(index + 1).padStart(2, '0')} / {String(photos.length).padStart(2, '0')}
+        </span>
+        <button type="button" onClick={() => move(1)} aria-label={`Next ${label} photo`}>
+          →
+        </button>
+      </div>
+    </>
   );
 
   return (
@@ -49,10 +52,7 @@ export default function PhotoAlbum({ photos, label = 'Project' }) {
           style={{ objectPosition: photo.position || 'center', objectFit: photo.fit }}
         />
       </button>
-      <figcaption className="album-caption">
-        <span>{photo.label}</span>
-        {navigation}
-      </figcaption>
+      <figcaption className="album-caption">{caption}</figcaption>
       <dialog
         className="album-dialog"
         ref={dialog}
@@ -71,10 +71,7 @@ export default function PhotoAlbum({ photos, label = 'Project' }) {
             close [esc]
           </button>
           <img src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} />
-          <div className="album-caption">
-            <span>{photo.label}</span>
-            {navigation}
-          </div>
+          <div className="album-caption">{caption}</div>
         </div>
       </dialog>
     </figure>

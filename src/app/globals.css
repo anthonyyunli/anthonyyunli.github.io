@@ -188,27 +188,21 @@ h1, h2, p {
   grid-template-columns: max(calc(50% + 24px), calc(75% - var(--shell-text-width) / 2)) minmax(0, 1fr);
 }
 
-.terminal-pane {
+.home > * {
   min-width: 0;
-  display: flex;
-  flex-direction: column;
 }
 
 .shell-content {
-  flex: 1;
   display: grid;
   place-items: center start;
-  padding: 0;
 }
 
 .home-inner {
   width: 100%;
   max-width: var(--shell-text-width);
-  text-align: left;
 }
 
 .home .command-line {
-  justify-content: flex-start;
   margin-bottom: 14px;
 }
 
@@ -231,7 +225,6 @@ h1, h2, p {
 .file-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
   gap: 12px 24px;
   font-size: 13px;
   color: var(--foreground);
@@ -288,7 +281,6 @@ h1, h2, p {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  background: transparent;
   scroll-margin-top: 24px;
 }
 
@@ -443,7 +435,7 @@ h1, h2, p {
 
 .about-layout {
   display: grid;
-  grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+  grid-template-columns: minmax(0, 280px) minmax(0, 560px);
   align-items: start;
   gap: 40px;
 }
@@ -451,6 +443,7 @@ h1, h2, p {
 .about-photo {
   display: block;
   width: 100%;
+  max-width: 280px;
   height: auto;
 }
 
@@ -461,15 +454,9 @@ h1, h2, p {
   line-height: 1.95;
 }
 
-/* Only monochrome characters from the rendered model are shown. */
-.ascii-pane {
-  justify-content: center;
-}
-
 .ascii-rabbit {
   width: 100%;
   margin: auto 0;
-  padding: 0;
 }
 
 .rabbit-viewport {
@@ -535,7 +522,6 @@ h1, h2, p {
 
   .site-header nav {
     gap: 17px;
-    font-size: 12px;
     margin-left: -7px;
   }
 
@@ -582,10 +568,6 @@ h1, h2, p {
   .about-layout {
     grid-template-columns: 1fr;
     gap: 28px;
-  }
-
-  .about-photo {
-    max-width: 560px;
   }
 
   .rabbit-viewport {

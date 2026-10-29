@@ -5,9 +5,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 // Selected camera preset, in degrees and normalized model units.
 const INITIAL_VIEW = { azimuth: 332.1, elevation: -5, distance: 5.7 };
-const GLIDE_SECONDS = 1.1;
+const GLIDE_SECONDS = 0.6;
 const ORBIT_STEP = THREE.MathUtils.degToRad(2);
-const ORBIT_INTERVAL = 1000 / 12;
 
 function disposeModel(root) {
   root?.traverse((object) => {
@@ -56,7 +55,6 @@ export async function createAsciiRabbit(host, signal) {
   controls.enableDamping = !motion.matches;
   controls.dampingFactor = 1 - Math.exp(-1 / (60 * GLIDE_SECONDS));
   controls.rotateSpeed = .4;
-  controls.target.set(0, 0, 0);
   controls.update();
 
   const anchorAzimuth = controls.getAzimuthalAngle();
@@ -74,7 +72,6 @@ export async function createAsciiRabbit(host, signal) {
   let frame = 0;
   let lastFrame = performance.now();
   let lastRender = lastFrame;
-  let lastOrbit = -Infinity;
 
   function markDirty() { dirty = true; }
   controls.addEventListener('change', markDirty);
@@ -99,16 +96,11 @@ export async function createAsciiRabbit(host, signal) {
   }
   motion.addEventListener('change', onMotionChange);
 
-  function render(now) {
-    if (now - lastOrbit >= ORBIT_INTERVAL) {
-      const theta = anchorAzimuth + Math.round((controls.getAzimuthalAngle() - anchorAzimuth) / ORBIT_STEP) * ORBIT_STEP;
-      const phi = anchorPolar + Math.round((controls.getPolarAngle() - anchorPolar) / ORBIT_STEP) * ORBIT_STEP;
-      camera.position.setFromSphericalCoords(INITIAL_VIEW.distance, phi, theta);
-      camera.lookAt(controls.target);
-      lastOrbit = now;
-      dirty = false;
-    }
-    // Keep pending camera input dirty until its next tick, even with reduced motion.
+  function render() {
+    const theta = anchorAzimuth + Math.round((controls.getAzimuthalAngle() - anchorAzimuth) / ORBIT_STEP) * ORBIT_STEP;
+    const phi = anchorPolar + Math.round((controls.getPolarAngle() - anchorPolar) / ORBIT_STEP) * ORBIT_STEP;
+    camera.position.setFromSphericalCoords(INITIAL_VIEW.distance, phi, theta);
+    camera.lookAt(controls.target);
     effect.render(scene, camera);
   }
 
@@ -161,7 +153,7 @@ export async function createAsciiRabbit(host, signal) {
       const delta = Math.min((now - lastFrame) / 1000, 0.1);
       lastFrame = now;
       if (!visible || document.hidden) return;
-      // Smooth coasting with a shorter tail, independent of refresh rate.
+      // Damping builds momentum during a drag and lets it decay after release.
       controls.dampingFactor = 1 - Math.exp(-delta / GLIDE_SECONDS);
       controls.update(delta);
       if (!motion.matches) {
@@ -169,11 +161,12 @@ export async function createAsciiRabbit(host, signal) {
         dirty = true;
       }
       if (dirty && now - lastRender >= 1000 / 24) {
-        render(now);
+        render();
+        dirty = false;
         lastRender = now;
       }
     }
-    render(performance.now());
+    render();
     frame = requestAnimationFrame(animate);
   } catch (error) {
     dispose();
