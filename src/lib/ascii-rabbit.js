@@ -7,7 +7,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 const INITIAL_VIEW = { azimuth: 332.1, elevation: -5, distance: 5.7 };
 const GLIDE_SECONDS = 1.1;
 const ORBIT_STEP = THREE.MathUtils.degToRad(2);
-const FRAME_INTERVAL = 1000 / 12;
+const ORBIT_INTERVAL = 1000 / 12;
 
 function disposeModel(root) {
   root?.traverse((object) => {
@@ -74,6 +74,7 @@ export async function createAsciiRabbit(host, signal) {
   let frame = 0;
   let lastFrame = performance.now();
   let lastRender = lastFrame;
+  let lastOrbit = -Infinity;
 
   function markDirty() { dirty = true; }
   controls.addEventListener('change', markDirty);
@@ -98,11 +99,16 @@ export async function createAsciiRabbit(host, signal) {
   }
   motion.addEventListener('change', onMotionChange);
 
-  function render() {
-    const theta = anchorAzimuth + Math.round((controls.getAzimuthalAngle() - anchorAzimuth) / ORBIT_STEP) * ORBIT_STEP;
-    const phi = anchorPolar + Math.round((controls.getPolarAngle() - anchorPolar) / ORBIT_STEP) * ORBIT_STEP;
-    camera.position.setFromSphericalCoords(INITIAL_VIEW.distance, phi, theta);
-    camera.lookAt(controls.target);
+  function render(now) {
+    if (now - lastOrbit >= ORBIT_INTERVAL) {
+      const theta = anchorAzimuth + Math.round((controls.getAzimuthalAngle() - anchorAzimuth) / ORBIT_STEP) * ORBIT_STEP;
+      const phi = anchorPolar + Math.round((controls.getPolarAngle() - anchorPolar) / ORBIT_STEP) * ORBIT_STEP;
+      camera.position.setFromSphericalCoords(INITIAL_VIEW.distance, phi, theta);
+      camera.lookAt(controls.target);
+      lastOrbit = now;
+      dirty = false;
+    }
+    // Keep pending camera input dirty until its next tick, even with reduced motion.
     effect.render(scene, camera);
   }
 
@@ -162,13 +168,12 @@ export async function createAsciiRabbit(host, signal) {
         mixer.update(delta);
         dirty = true;
       }
-      if (dirty && now - lastRender >= FRAME_INTERVAL) {
-        render();
-        dirty = false;
+      if (dirty && now - lastRender >= 1000 / 24) {
+        render(now);
         lastRender = now;
       }
     }
-    render();
+    render(performance.now());
     frame = requestAnimationFrame(animate);
   } catch (error) {
     dispose();
