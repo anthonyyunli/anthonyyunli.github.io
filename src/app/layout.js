@@ -4,7 +4,7 @@ import { PageTerminal } from '../components/Terminal';
 import './globals.css';
 
 export const metadata = {
-  title: { default: '0xc0ffee.ca', template: '%s | 0xc0ffee.ca' },
+  title: { default: 'anthonyyunli', template: '%s | anthonyyunli' },
   description: 'Anthony Li — computer science, projects, and the occasional devlog.',
   icons: { icon: '/favicon.svg' },
 };

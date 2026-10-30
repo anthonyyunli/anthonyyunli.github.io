@@ -14,7 +14,7 @@ export default function Header() {
 
   return (
     <header className="site-header">
-      <a className="site-name" href="/"><span aria-hidden="true">&gt;_</span> 0xc0ffee.ca</a>
+      <a className="site-name" href="/"><span aria-hidden="true">&gt;_</span> anthonyyunli</a>
       <nav aria-label="Main navigation">
         {pages.map(({ href, label }) => (
           <a key={href} href={href} aria-current={pathname === href ? 'page' : undefined}>{label}</a>
