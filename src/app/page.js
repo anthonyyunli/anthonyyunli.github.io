@@ -1,7 +1,5 @@
-import CommandLine from '../components/CommandLine';
+import Terminal, { CommandLine, DirectoryLinks } from '../components/Terminal';
 import AsciiRabbit from '../components/AsciiRabbit';
-import HomeTerminal from '../components/HomeTerminal';
-import DirectoryLinks from '../components/DirectoryLinks';
 
 export default function Home() {
   return (
@@ -15,7 +13,7 @@ export default function Home() {
             <CommandLine>ls</CommandLine>
             <DirectoryLinks />
           </div>
-          <HomeTerminal />
+          <Terminal />
         </div>
       </div>
     </section>

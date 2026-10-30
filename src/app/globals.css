@@ -300,11 +300,22 @@ h1, h2, p {
 
 }
 
-.page-content {
+.page-content, .page-terminal {
   width: 100%;
   max-width: 1200px;
   margin-inline: auto;
+}
+
+.page-content {
   padding: 52px 32px 64px;
+}
+
+.page-terminal {
+  padding: 0 32px 24px;
+}
+
+.page-terminal .idle-prompt {
+  margin-top: 0;
 }
 
 .page-title {
@@ -599,6 +610,10 @@ h1, h2, p {
 
   .page-content {
     padding: 36px 20px 48px;
+  }
+
+  .page-terminal {
+    padding-inline: 20px;
   }
 
   .page-title {

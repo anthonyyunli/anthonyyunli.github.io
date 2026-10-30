@@ -18,30 +18,48 @@ npm test
 npm run build
 ```
 
-Tests cover deterministic fur shading. The build exports all pages and public assets to `out/`, ready for a static host. `.openai/hosting.json` configures the existing private Sites preview. Custom-domain/DNS setup for `0xc0ffee.ca` is still pending.
+Unit tests cover deterministic fur shading. Browser checks in `tests/terminal.browser.mjs` cover terminal commands, paths, navigation, input, and the joke sequence. The build exports all pages and public assets to `out/`, ready for a static host. `.openai/hosting.json` configures the existing private Sites preview. Custom-domain/DNS setup for `0xc0ffee.ca` is still pending.
 
 ## Where to edit
 
 | Change | File |
 | --- | --- |
-| Home text and directory links | `src/app/page.js` |
-| Interactive Home commands | `src/components/HomeTerminal.js` |
-| About photo and paragraphs | `src/app/about/page.js` |
+| Home layout and text | `src/app/page.js` |
+| Filesystem, commands, prompts, and terminal UI | `src/components/Terminal.js` |
+| About paragraphs and project content | `src/data/site.js` |
+| About photo and layout | `src/app/about/page.js` |
 | Blog entries | `src/app/blog/page.js` |
-| Project content, links, and images | `src/data/projects.js` |
 | Project markup | `src/components/ProjectEntry.js` |
 | Photo album controls | `src/components/PhotoAlbum.js` |
 | Navigation and footer | `src/components/Header.js`, `Footer.js` |
 | Site metadata | `src/app/layout.js` |
 | Layout, colors, and responsive rules | `src/app/globals.css` |
 
-Pages are server components. Navigation state, the rabbit, photo albums, and the Home prompt use small client components. Event handlers remain beside the UI they control; there is no state manager or custom-hook layer.
+Pages are server components. Navigation state, the rabbit, photo albums, and terminal UI use client components. Event handlers remain beside the UI they control; there is no state manager or custom-hook layer.
 
 CSS is grouped by feature, with one mobile breakpoint block at the end. All content pages share `.page-content` to keep prompts aligned. The home split uses `--shell-text-width` to keep the viewport boundary and text width in sync.
 
-The Home prompt activates when you start typing an alphanumeric key, preserving the first character. Its block cursor follows native text selection and scrolling; the full prompt appears after typing begins. It ignores keyboard shortcuts and other text fields. Commands are `whoami`, `ls`, `cd about`, `cd blog`, `cd projects`, and `clear`. It keeps the last eight responses in memory. `DirectoryLinks.js` supplies the same links to Home and `ls`; `CommandLine.js` shares the prompt markup.
+## Terminal
 
-`sudo` prints a joke. `rm -rf` mounts `FakeRemoval.js`, which prints fictional paths slowly, accelerates, reveals the joke, and reloads the page. The current history entry controls whether the prompt is read-only. One effect schedules each animation step and cancels its pending timer on unmount. These commands only change the page UI.
+All terminal-specific code lives in `src/components/Terminal.js`: the flat filesystem map, tokenizer, path operations, command table, and local UI components. Commands return data; the UI renders results and performs navigation. History holds data rather than React elements. Adding a command means adding one function to `commands`; it receives an argument array and the current directory.
+
+The URL is the current directory. `/projects/` displays as `~/projects`, and `pwd` prints `/projects`. `cd` reloads a normal page, resetting terminal history. Home keeps its existing prompt placement; About, Blog, and Projects have one prompt before the footer. Typing an alphanumeric key focuses the prompt and preserves the first character. The block cursor follows native selection and scrolling; shortcuts and other text fields are untouched. History keeps eight responses and input accepts 160 characters.
+
+```text
+ls
+cd projects
+pwd
+ls .
+cat cansat.txt
+cd ../blog
+cd ~
+```
+
+`ls [path]`, `cd [path]`, and `cat <file>` share path resolution for `.`, `..`, `~`, and absolute paths. The root contains `about/`, `blog/`, and `projects/`. About paragraphs are available at `/about/about.txt`; project summaries are `/projects/<id>.txt`. File content comes from `src/data/site.js`, shared with the pages. Quotes and backslash escapes work in arguments; unfinished input, missing paths, invalid argument counts, and treating files as directories produce text errors.
+
+`whoami` prints Anthony Li; `clear` clears visible history. `sudo` prints the existing joke. `rm -rf` starts the local fake-removal component, then reloads the same page. Its single timer is cancelled on unmount. These commands only change the page UI. No `help`, pipelines, scripting, or writable filesystem is implemented.
+
+To run the browser checks, serve the site on port 3001 and launch a Chromium-based browser with `--remote-debugging-port=9223` and a separate profile. Run `node tests/terminal.browser.mjs` with Node 22+. `SITE_URL` and `BROWSER_DEBUG_URL` can override those defaults. The script uses native WebSocket/CDP and needs no test dependency.
 
 ## Projects and photos
 

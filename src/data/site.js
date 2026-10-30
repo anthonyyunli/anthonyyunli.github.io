@@ -1,3 +1,8 @@
+export const aboutParagraphs = [
+  "I'm Anthony, a CS student at UofT. I like ML, algorithms, and building things from scratch. I've worked on CanSat, led Mayhem, and lately been experimenting with compact text detectors.",
+  'Outside of code, I lift, run, and occasionally commit to an unnecessarily long bike ride.',
+];
+
 export const projects = [
   {
     id: 'cansat',
