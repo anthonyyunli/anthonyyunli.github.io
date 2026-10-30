@@ -1,0 +1,13 @@
+.DS_Store
+node_modules/
+.next/
+out/
+.sites-runtime/
+*.log
+.sites/
+*.tar.gz
+*.tgz
+
+# Local source assets; optimized copies live in public/.
+temp/
+README.md

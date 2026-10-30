@@ -1,0 +1,103 @@
+export const aboutParagraphs = [
+  "I'm Anthony, a CS student at UofT. I like ML, algorithms, and building things from scratch. I've worked on CanSat, led Mayhem, and lately been experimenting with compact text detectors.",
+  'Outside of code, I lift, run, and occasionally commit to an unnecessarily long bike ride.',
+];
+
+export const projects = [
+  {
+    id: 'cansat',
+    title: 'CanSat Design Challenge',
+    role: 'Software Lead · 2025–2026',
+    stack: 'Python, PyTorch',
+    description: 'Computer vision, sensor processing, and flight software for a rocket-launched CanSat, built under compute, memory, and power constraints.',
+    href: 'https://github.com/CantSatTeam/CanSat-MHE',
+    photos: [
+      {
+        src: '/images/cansat-2113.webp',
+        alt: 'The CanSat rocket on its launch rail in a snowy field.',
+        label: 'IMG_2113',
+        width: 1200,
+        height: 1600,
+        position: '50% 12%',
+      },
+      {
+        src: '/images/cansat-3949.webp',
+        alt: 'The CanSat team with the payload and parachute at the launch site.',
+        label: '3949 (1)',
+        width: 1800,
+        height: 1350,
+      },
+      {
+        src: '/images/cansat-2125.webp',
+        alt: 'The CanSat payload with its recovery cord.',
+        label: 'IMG_2125',
+        width: 1200,
+        height: 1600,
+      },
+    ],
+  },
+  {
+    id: 'mayhem',
+    title: 'Mayhem',
+    role: 'Development Lead',
+    stack: 'Lua/Luau, Internal Tooling',
+    description: 'A multiplayer party FPS with unusual weapons and abilities. Led a 12-person team across code, art, animation, and music; played by over 200 players.',
+    href: 'https://github.com/Roblox-MAYHEM/Game',
+    image: {
+      src: '/images/mayhem.webp',
+      alt: 'A colorful industrial Mayhem map with cranes, platforms, and shipping containers.',
+      width: 1600,
+      height: 716,
+    },
+  },
+  {
+    id: 'cs229',
+    title: 'CS229',
+    role: 'Independent study · 2026',
+    stack: 'Python, PyTorch',
+    description: 'Machine-learning coursework and experiments, including compact AI text detection with CNNs and HMM/Viterbi mixed-authorship segmentation.',
+    href: 'https://github.com/anthonyyunli/cs229',
+  },
+  {
+    id: 'breckeys',
+    title: 'Breckeys',
+    role: 'Browser game',
+    stack: 'Unity, HTML5',
+    description: 'An underwater treasure-collecting game. Tether treasure to your craft, keep the battery charged, and try not to drown.',
+    href: 'https://anhony.itch.io/breckeys',
+  },
+  {
+    id: 'substracker',
+    title: 'Subs Tracker',
+    role: 'IB Computer Science IA',
+    stack: 'Vue, Django',
+    description: 'A subscription tracker with upcoming-payment reminders and usage tracking. Built for my IB Computer Science IA.',
+    href: 'https://github.com/anthonyyunli/subs-tracker',
+    photos: [
+      {
+        src: '/images/substracker-dashboard.webp',
+        alt: 'Subs Tracker dashboard with spending charts, usage, and upcoming subscription payments.',
+        label: 'dashboard',
+        width: 1600,
+        height: 781,
+        fit: 'contain',
+      },
+      {
+        src: '/images/substracker-add-plan.webp',
+        alt: 'Subs Tracker add-plan form with subscription details and a live card preview.',
+        label: 'add-plan',
+        width: 1600,
+        height: 774,
+        fit: 'contain',
+      },
+      {
+        src: '/images/substracker-wireframe.webp',
+        alt: 'Annotated Subs Tracker home-page wireframe showing charts, payments, and unused subscriptions.',
+        label: 'wireframe',
+        width: 1272,
+        height: 1076,
+        fit: 'contain',
+      },
+    ],
+  },
+];
