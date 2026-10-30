@@ -10,3 +10,4 @@ out/
 
 # Local source assets; optimized copies live in public/.
 temp/
+README.md
